@@ -1,6 +1,6 @@
 function Remove-MyRMClient {
+    [OutputType([void])]
     [CmdletBinding()]
-    [OutputType([System.Void])]
     param (
         [Parameter(
             Position = 0,
@@ -12,12 +12,13 @@ function Remove-MyRMClient {
         [string] $Name
     )
     begin {
-        $InventoryFile = Get-InventoryPath
+        $Inventory = New-Object -TypeName Inventory
+        $Inventory.ReadFile()
     }
     process {
-        Read-Inventory -Path $InventoryFile `
-        | Remove-InventoryItem -ClientName $Name `
-        | Save-Inventory -Path $InventoryFile
+        $Inventory.RemoveClient($Name)
+        $Inventory.SaveFile()
         Write-Verbose -Message ("Client `"{0}`" has been removed from the inventory." -f $Name)
     }
+    end {}
 }

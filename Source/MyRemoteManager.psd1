@@ -9,31 +9,31 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    RootModule        = 'MyRemoteManager.psm1'
+    RootModule           = 'MyRemoteManager.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.0.1'
+    ModuleVersion        = '0.0.1'
 
     # Supported PSEditions
-    # CompatiblePSEditions = @()
+    CompatiblePSEditions = @("Core")
 
     # ID used to uniquely identify this module
-    GUID              = '322b0f58-07df-4c88-9b9b-3c1ab966fa3a'
+    GUID                 = '322b0f58-07df-4c88-9b9b-3c1ab966fa3a'
 
     # Author of this module
-    Author            = 'Maxence Grymonprez'
+    Author               = 'Maxence Grymonprez'
 
     # Company or vendor of this module
-    CompanyName       = ''
+    CompanyName          = ''
 
     # Copyright statement for this module
-    Copyright         = '(c) Maxence Grymonprez. All rights reserved.'
+    Copyright            = 'Copyright (c) 2021 by Maxence Grymonprez, licensed under MIT License.'
 
     # Description of the functionality provided by this module
-    Description       = 'A simple remote manager in PowerShell.'
+    Description          = 'A simple remote manager in PowerShell.'
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion = '6.0'
+    PowerShellVersion    = '6.0'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''
@@ -69,16 +69,16 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @()
+    FunctionsToExport    = @()
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport   = @()
+    CmdletsToExport      = @()
 
     # Variables to export from this module
     # VariablesToExport = @()
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = @()
+    AliasesToExport      = @()
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -90,7 +90,7 @@
     # FileList = @()
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
-    PrivateData       = @{
+    PrivateData          = @{
 
         PSData = @{
 
@@ -98,16 +98,16 @@
             # Tags = @()
 
             # A URL to the license for this module.
-            # LicenseUri = ''
+            LicenseUri   = 'https://github.com/VouDoo/MyRemoteManager/blob/main/LICENSE'
 
             # A URL to the main website for this project.
-            # ProjectUri = ''
+            ProjectUri   = 'https://github.com/VouDoo/MyRemoteManager'
 
             # A URL to an icon representing this module.
             # IconUri = ''
 
             # ReleaseNotes of this module
-            # ReleaseNotes = ''
+            ReleaseNotes = 'https://github.com/VouDoo/MyRemoteManager/releases'
 
             # Prerelease string of this module
             # Prerelease = ''

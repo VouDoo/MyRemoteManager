@@ -8,11 +8,10 @@ $Source = Join-Path -Path $PSScriptRoot -ChildPath "Source"
 $Build = Join-Path -Path $PSScriptRoot -ChildPath "Build"
 
 $Header = Get-Item -Path "$Source\$ModuleName.Header.ps1"
-$Variables = Get-Item -Path "$Source\$ModuleName.Variables.ps1"
 $Classes = Get-ChildItem -Path "$Source\Classes\*.ps1" -Exclude "*.Tests.*" | Sort-Object Name
 $PrivateFunctions = Get-ChildItem -Path "$Source\Private\*.ps1" -Exclude "*.Tests.*"
 $PublicFunctions = Get-ChildItem -Path "$Source\Public\*.ps1" -Exclude "*.Tests.*"
-$Footer = Get-Item -Path "$Source\$ModuleName.Footer.ps1"
+$Aliases = Get-Item -Path "$Source\$ModuleName.Aliases.ps1"
 
 Write-Information -MessageData "[build][start] --- build started ---"
 
@@ -40,10 +39,6 @@ if (Test-Path -Path $ModuleFile.Path) {
 Write-Information -MessageData "[build][module] Add header."
 Add-Content @ModuleFile -Value ((Get-Content -Path $Header.FullName) + "`n")
 
-# Add global variable declarations
-Write-Information -MessageData "[build][module] Add global variable declarations."
-Add-Content @ModuleFile -Value ((Get-Content -Path $Variables.FullName) + "`n")
-
 # Add classes
 Add-Content @ModuleFile -Value "#region Classes"
 $Classes | ForEach-Object {
@@ -68,9 +63,9 @@ $PublicFunctions | ForEach-Object {
 }
 Add-Content @ModuleFile -Value "#endregion Public functions`n"
 
-# Add footer
-Write-Information -MessageData "[build][module] Add footer."
-Add-Content @ModuleFile -Value (Get-Content -Path $Footer.FullName)
+# Add aliases
+Write-Information -MessageData "[build][module] Add aliases."
+Add-Content @ModuleFile -Value (Get-Content -Path $Aliases.FullName)
 
 Write-Information -MessageData "[build][module] Done."
 #endregion Build module file

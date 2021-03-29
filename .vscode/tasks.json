@@ -6,13 +6,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "./build.ps1",
-            "problemMatcher": []
-        },
-        {
-            "label": "psake",
-            "type": "shell",
-            "command": "./Start-psake.ps1",
+            "command": "./build.ps1 -InformationAction Continue",
             "problemMatcher": []
         }
     ]

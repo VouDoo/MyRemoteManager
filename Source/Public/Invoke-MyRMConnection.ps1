@@ -1,7 +1,6 @@
-# TODO develop Invoke-MyRMConnection function
 function Invoke-MyRMConnection {
+    [OutputType([void])]
     [CmdletBinding()]
-    [OutputType([System.Void])]
     param (
         [Parameter(
             Position = 0,
@@ -13,16 +12,18 @@ function Invoke-MyRMConnection {
         [string] $Name
     )
     begin {
-        $Inventory = Read-Inventory -Path (Get-InventoryPath)
-        $Connection = $Inventory | Get-InventoryItem -ConnectionName $Name
-        $Client = $Inventory | Get-InventoryItem -ClientName $Connection.ClientName
+        $Inventory = New-Object -TypeName Inventory
+        $Inventory.ReadFile()
     }
     process {
-        $Port = if ($Connection.Port -eq 0) { $Client.DefaultPort } else { $Connection.Port }
-        $Command = $Client.Command `
-            -replace "<host>", $Connection.Hostname `
-            -replace "<port>", $Port `
-            -replace "<user>", $Connection.Username
-        Invoke-Expression -Command $Command
+        $Connection = $Inventory.Connections | Where-Object { $_.Name -eq $Name }
+        $Client = $Inventory.Clients | Where-Object { $_.Name -eq $Connection.ClientName }
+        if ($Connection.Port -eq 0) {
+            Invoke-Expression -Command $Client.GenerateCommand($Connection.Hostname)
+        }
+        else {
+            Invoke-Expression -Command $Client.GenerateCommand($Connection.Hostname, $Connection.Port)
+        }
     }
+    end {}
 }

@@ -1,6 +1,6 @@
 function Remove-MyRMConnection {
+    [OutputType([void])]
     [CmdletBinding()]
-    [OutputType([System.Void])]
     param (
         [Parameter(
             Position = 0,
@@ -12,12 +12,13 @@ function Remove-MyRMConnection {
         [string] $Name
     )
     begin {
-        $InventoryFile = Get-InventoryPath
+        $Inventory = New-Object -TypeName Inventory
+        $Inventory.ReadFile()
     }
     process {
-        Read-Inventory -Path $InventoryFile `
-        | Remove-InventoryItem -ConnectionName $Name `
-        | Save-Inventory -Path $InventoryFile
+        $Inventory.RemoveConnection($Name)
+        $Inventory.SaveFile()
         Write-Verbose -Message ("Connection `"{0}`" has been removed from the inventory." -f $Name)
     }
+    end {}
 }

@@ -1,6 +1,6 @@
 function Add-MyRMClient {
+    [OutputType([string])]
     [CmdletBinding()]
-    [OutputType([Client])]
     param (
         [Parameter(
             Mandatory = $true,
@@ -15,11 +15,6 @@ function Add-MyRMClient {
         )]
         [ValidateNotNullOrEmpty()]
         [string] $Command,
-
-        [Parameter(
-            HelpMessage = "Execute CmdKey before the client's command."
-        )]
-        [bool] $RequiresCmdKey = $false,
 
         [Parameter(
             Mandatory = $true,
@@ -39,18 +34,25 @@ function Add-MyRMClient {
         [switch] $PassThru
     )
     begin {
-        $InventoryFile = Get-InventoryPath
-        $Client = New-Object -TypeName Client -ArgumentList $Name, $Command, $RequiresCmdKey, $DefaultPort, $Description
+        $Inventory = New-Object -TypeName Inventory
+        $Inventory.ReadFile()
     }
     process {
-        Read-Inventory -Path $InventoryFile `
-        | Add-InventoryItem -Client $Client `
-        | Save-Inventory -Path $InventoryFile
-        Write-Verbose -Message ("Client `"{0}`" has been added to the inventory." -f $Client.Name)
+        $Inventory.AddClient(
+            (New-Object -TypeName Client -ArgumentList @(
+                    $Name,
+                    $Command,
+                    $DefaultPort,
+                    $Description
+                )
+            )
+        )
+        $Inventory.SaveFile()
+        Write-Verbose -Message ("Client `"{0}`" has been added to the inventory." -f $Name)
     }
     end {
         if ($PassThru.IsPresent) {
-            $Client
+            $Name
         }
     }
 }

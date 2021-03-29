@@ -1,6 +1,6 @@
 function New-MyRMInventory {
-    [CmdletBinding()]
     [OutputType([string])]
+    [CmdletBinding()]
     param (
         [Parameter(
             HelpMessage = "Do not add defaults clients."
@@ -18,35 +18,40 @@ function New-MyRMInventory {
         [switch] $PassThru
     )
     begin {
-        $File = Get-InventoryPath
-        $Inventory = @{ Clients = @{}; Connections = @{} }
-        if (-not $NoDefaultClients.IsPresent) {
-            # TODO Dynamically call Add-Inventory for each $script:DefaultClient* variables
-            $Inventory = $Inventory `
-            | Add-InventoryItem -Client $script:DefaultClientRD `
-            | Add-InventoryItem -Client $script:DefaultClientSSH
-        }
+        $Inventory = New-Object -TypeName Inventory
     }
     process {
-        if (Test-Path -Path $File -PathType Leaf) {
-            if ($Force.IsPresent) {
-                Save-Inventory -Inventory $Inventory -Path $File
-                Write-Verbose -Message "Inventory file has been overwritten: $File"
-            }
-            else {
-                Write-Error -ErrorAction Stop -Exception (
-                    [System.IO.IOException] "Inventory file already exists. Use `"-Force`" to overwrite it."
+        if ((Test-Path -Path $Inventory.Path -PathType Leaf) -and -not ($Force.IsPresent)) {
+            Write-Error -ErrorAction Stop -Exception (
+                [System.IO.IOException] "Inventory file already exists. Use `"-Force`" to overwrite it."
+            )
+        }
+        if (-not $NoDefaultClients.IsPresent) {
+            $Inventory.AddClient(
+                (New-Object -TypeName Client -ArgumentList @(
+                        "SSH",
+                        "C:\Windows\System32\OpenSSH\ssh.exe -p <port> <host>",
+                        22,
+                        "OpenSSH from Microsoft Windows feature."
+                    )
                 )
-            }
+            )
+            $Inventory.AddClient(
+                (New-Object -TypeName Client -ArgumentList @(
+                        "RD",
+                        "C:\Windows\System32\mstsc.exe /v:<host>:<port> /fullscreen",
+                        3389,
+                        "Microsoft Remote Desktop."
+                    )
+                )
+            )
         }
-        else {
-            Save-Inventory -Inventory $Inventory -Path $File
-            Write-Verbose -Message "Inventory file has been created: $File"
-        }
+        $Inventory.SaveFile()
+        Write-Verbose -Message ("Inventory file has been created: {0}" -f $Inventory.Path)
     }
     end {
         if ($PassThru.IsPresent) {
-            Resolve-Path $File | Select-Object -ExpandProperty Path
+            Resolve-Path $Inventory.Path | Select-Object -ExpandProperty Path
         }
     }
 }

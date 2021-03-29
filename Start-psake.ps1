@@ -1,1 +1,2 @@
-Invoke-psake -buildFile .\psakefile.ps1 -InformationAction Continue
+$psakefile = Join-Path -Path $PSScriptRoot -ChildPath "psakefile.ps1"
+Invoke-psake -buildFile $psakefile -InformationAction Continue

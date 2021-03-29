@@ -1,6 +1,6 @@
 function Add-MyRMConnection {
+    [OutputType([string])]
     [CmdletBinding()]
-    #[OutputType([Connection])]
     param (
         [Parameter(
             Mandatory = $true,
@@ -24,13 +24,6 @@ function Add-MyRMConnection {
 
         [Parameter(
             Mandatory = $true,
-            HelpMessage = "User to log in as on the remote host."
-        )]
-        [ValidateNotNullOrEmpty()]
-        [string] $Username,
-
-        [Parameter(
-            Mandatory = $true,
             HelpMessage = "Client to use to connect to the remote host."
         )]
         [ValidateNotNullOrEmpty()]
@@ -48,18 +41,26 @@ function Add-MyRMConnection {
         [switch] $PassThru
     )
     begin {
-        $InventoryFile = Get-InventoryPath
-        $Connection = New-Object -TypeName Connection -ArgumentList $Name, $Hostname, $Port, $Username, $ClientName, $Description
+        $Inventory = New-Object -TypeName Inventory
+        $Inventory.ReadFile()
     }
     process {
-        Read-Inventory -Path $InventoryFile `
-        | Add-InventoryItem -Connection $Connection `
-        | Save-Inventory -Path $InventoryFile
-        Write-Verbose -Message ("Connection `"{0}`" has been added to the inventory." -f $Connection.Name)
+        $Inventory.AddConnection(
+            (New-Object -TypeName Connection -ArgumentList @(
+                    $Name,
+                    $Hostname,
+                    $Port,
+                    $ClientName,
+                    $Description
+                )
+            )
+        )
+        $Inventory.SaveFile()
+        Write-Verbose -Message ("Connection `"{0}`" has been added to the inventory." -f $Name)
     }
     end {
         if ($PassThru.IsPresent) {
-            $Connection
+            $Name
         }
     }
 }

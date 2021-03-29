@@ -4,179 +4,145 @@ BeforeAll {
 }
 Describe "New-MyRMInventory" {
     BeforeAll {
-        $TestInventoryFile = Join-Path -Path $TestDrive -ChildPath "MyRemoteManager.json"
-        $Env:MY_RM_INVENTORY = $TestInventoryFile
+        $Env:MY_RM_INVENTORY = Join-Path -Path $TestDrive -ChildPath "MyRemoteManager.json"
     }
     It "Creates a new inventory file." {
-        New-MyRMInventory -PassThru | Should -Be $TestInventoryFile
+        New-MyRMInventory -PassThru | Should -Be $Env:MY_RM_INVENTORY
     }
-    It "Creates a new inventory file, even if it already exists." {
+    It "Creates a new inventory file even if it already exists, and fails." {
         { New-MyRMInventory -PassThru } | Should -Throw -ExceptionType "System.IO.IOException"
     }
     It "Forces the creation of a new inventory file." {
-        New-MyRMInventory -Force -PassThru | Should -Be $TestInventoryFile
-    }
-    It "Forces the creation of a new inventory file (path from environment variable)." {
-        New-MyRMInventory -Force -PassThru | Should -Be $TestInventoryFile
+        New-MyRMInventory -Force -PassThru | Should -Be $Env:MY_RM_INVENTORY
     }
     It "Checks if a backup file has been created." {
-        $TestInventoryBackupFile = $TestInventoryFile + ".backup"
+        $TestInventoryBackupFile = $Env:MY_RM_INVENTORY + ".backup"
         Test-Path -Path $TestInventoryBackupFile -PathType Leaf | Should -BeTrue
     }
     It "Validates the JSON content from the inventory file." {
-        $PSObject = Get-Content -Path $TestInventoryFile | ConvertFrom-Json -AsHashtable
+        $PSObject = Get-Content -Path $Env:MY_RM_INVENTORY | ConvertFrom-Json -AsHashtable
         $PSObject.ContainsKey("Connections") | Should -BeTrue
         $PSObject.ContainsKey("Clients") | Should -BeTrue
         $PSObject.ContainsKey("Foo") | Should -BeFalse
     }
-
 }
 Describe "Add-MyRMClient" {
     BeforeAll {
         $Env:MY_RM_INVENTORY = Join-Path -Path $TestDrive -ChildPath "MyRemoteManager.json"
-        New-MyRMInventory | Out-Null
+        New-MyRMInventory
     }
     It "Adds a client." {
         $Arguments = @{
             Name        = "TstClient1"
-            Command     = "client -u <user> -p <port> <host>"
+            Command     = "client -p <port> <host>"
             DefaultPort = 1234
             Description = "A test client."
         }
         $TestClient = Add-MyRMClient @Arguments -PassThru
-        $TestClient | Should -BeOfType object
-        $TestClient.Name | Should -BeExactly "TstClient1"
-        $TestClient.Command | Should -BeExactly "client -u <user> -p <port> <host>"
-        $TestClient.RequiresCmdKey | Should -BeExactly $false
-        $TestClient.DefaultPort | Should -BeExactly 1234
-        $TestClient.Description | Should -BeExactly "A test client."
+        $TestClient | Should -Be "TstClient1"
     }
-    It "Adds another client (path from environment variable)." {
+    It "Adds another client." {
         $Arguments = @{
             Name        = "TstClient2"
-            Command     = "client -u <user> -p <port> <host>"
-            DefaultPort = 1234
+            Command     = "client.exe <host> -p <port>"
+            DefaultPort = 5678
         }
-        Add-MyRMClient @Arguments -PassThru | Should -BeOfType object
+        $TestClient = Add-MyRMClient @Arguments -PassThru
+        $TestClient | Should -Be "TstClient2"
     }
-    It "Adds a client, but with a already used name." {
+    It "Adds a client with an already used name, and fails." {
         $Arguments = @{
             Name        = "TstClient2"
-            Command     = "client -u <user> -p <port> <host>"
-            DefaultPort = 1234
+            Command     = "client -p <port> <host>"
+            DefaultPort = 2468
         }
-        { Add-MyRMClient @Arguments -PassThru } | Should -Throw -ExpectedMessage "Client `"TstClient2`" already exists."
+        { Add-MyRMClient @Arguments -PassThru } | Should -Throw -ExpectedMessage "Cannot add Client `"TstClient2`" as it already exists."
     }
-    It "Adds a client, without a required token in the command." {
+    It "Adds a client without a required token in the command, and fails." {
         $Arguments = @{
             Name        = "TstClient3"
-            Command     = "client -u <user> -p <prot> <host>"
+            Command     = "client -p <prot> <host>"
             DefaultPort = 1234
         }
         { Add-MyRMClient @Arguments -PassThru } | Should -Throw -ExpectedMessage "*The command does not contain the following token: port*"
-    }
-    It "Adds a client, with RequiresCmdKey and without the <user> token in the command." {
-        $Arguments = @{
-            Name           = "TstClient4"
-            Command        = "client -p <port> <host>"
-            DefaultPort    = 1234
-            RequiresCmdKey = $true
-            Description    = "A test client that requires cmdkey."
-        }
-        Add-MyRMClient @Arguments -PassThru | Should -BeOfType object
     }
 }
 Describe "Add-MyRMConnection" {
     BeforeAll {
         $Env:MY_RM_INVENTORY = Join-Path -Path $TestDrive -ChildPath "MyRemoteManager.json"
-        New-MyRMInventory -Force | Out-Null
-        Add-MyRMClient -Name "TestClient" -Command "client -u <user> -p <port> <host>" -DefaultPort 1234
+        New-MyRMInventory
+        Add-MyRMClient -Name "TestClient" -Command "client -p <port> <host>" -DefaultPort 1234
     }
     It "Adds a connection." {
         $Arguments = @{
             Name        = "TestConnection1"
             Hostname    = "Hostname.test"
             Port        = 1234
-            User        = "test-user"
             ClientName  = "TestClient"
             Description = "A test connection."
         }
-        $TestConnection = Add-MyRMConnection @Arguments -PassThru
-        $TestConnection | Should -BeOfType object
-        $TestConnection.Name | Should -BeExactly "TestConnection1"
-        $TestConnection.Hostname | Should -BeExactly "hostname.test"
-        $TestConnection.Port | Should -BeExactly 1234
-        $TestConnection.Username | Should -BeExactly "test-user"
-        $TestConnection.ClientName | Should -BeExactly "TestClient"
-        $TestConnection.Description | Should -BeExactly "A test connection."
+        Add-MyRMConnection @Arguments -PassThru | Should -Be "TestConnection1"
     }
-    It "Adds another connection (path from environment variable)." {
+    It "Adds another connection." {
         $Arguments = @{
             Name       = "TestConnection2"
             Hostname   = "Hostname.test"
-            Port       = 1234
-            User       = "test-user"
+            Port       = 5678
             ClientName = "TestClient"
         }
-        Add-MyRMConnection @Arguments -PassThru | Should -BeOfType object
+        Add-MyRMConnection @Arguments -PassThru | Should -Be "TestConnection2"
     }
-    It "Adds a connection, but with a already used name." {
+    It "Adds a connection with an already used name, and fails." {
         $Arguments = @{
             Name       = "TestConnection2"
             Hostname   = "Hostname.test"
-            Port       = 1234
-            User       = "test-user"
+            Port       = 2468
             ClientName = "TestClient"
         }
-        { Add-MyRMConnection @Arguments -PassThru } | Should -Throw -ExpectedMessage "Connection `"TestConnection2`" already exists."
+        { Add-MyRMConnection @Arguments -PassThru } | Should -Throw -ExpectedMessage "Cannot add Connection `"TestConnection2`" as it already exists."
     }
 }
 Describe "Remove-MyRMClient" {
     BeforeAll {
+        $Env:MY_RM_INVENTORY = Join-Path -Path $TestDrive -ChildPath "MyRemoteManager.json"
+        New-MyRMInventory
+    }
+    BeforeEach {
         $TestClientArguments = @{
             Name        = "TestClient"
-            Command     = "client -u <user> -p <port> <host>"
+            Command     = "client -p <port> <host>"
             DefaultPort = 1234
             Description = "A test client."
         }
-        $Env:MY_RM_INVENTORY = Join-Path -Path $TestDrive -ChildPath "MyRemoteManager.json"
-        New-MyRMInventory | Out-Null
+        Add-MyRMClient @TestClientArguments
     }
     It "Removes the `"TestClient`" Client" {
-        Add-MyRMClient @TestClientArguments
         Remove-MyRMClient -Name "TestClient" | Should -Be $null
     }
-    It "Removes the `"TestClient`" Client (path from environment variable)" {
-        Add-MyRMClient @TestClientArguments
-        Remove-MyRMClient -Name "TestClient" | Should -Be $null
-    }
-    It "Removes the `"TestClient`" Client, even if it does not exist." {
-        { Remove-MyRMClient -Name "TestClient" } | Should -Throw
+    It "Removes the `"TstClient0`" Client even if it does not exist, and fails." {
+        { Remove-MyRMClient -Name "TstClient0" } | Should -Throw
     }
 }
 Describe "Remove-MyRMConnection" {
     BeforeAll {
         $Env:MY_RM_INVENTORY = Join-Path -Path $TestDrive -ChildPath "MyRemoteManager.json"
-        New-MyRMInventory | Out-Null
-        Add-MyRMClient -Name "TestClient" -Command "client -u <user> -p <port> <host>" -DefaultPort 1234
+        New-MyRMInventory
+        Add-MyRMClient -Name "TestClient" -Command "client -p <port> <host>" -DefaultPort 1234
+    }
+    BeforeEach {
         $TestConnectionArguments = @{
             Name        = "TestConnection"
             Hostname    = "Hostname.test"
             Port        = 1234
-            User        = "test-user"
             ClientName  = "TestClient"
             Description = "A test connection."
         }
+        Add-MyRMConnection @TestConnectionArguments
     }
     It "Removes the `"TestConnection`" Connection" {
-        Add-MyRMConnection @TestConnectionArguments
         Remove-MyRMConnection -Name "TestConnection" | Should -Be $null
     }
-    It "Removes the `"TestConnection`" Connection (path from environment variable)" {
-        Add-MyRMConnection @TestConnectionArguments
-        Remove-MyRMConnection -Name "TestConnection" | Should -Be $null
-    }
-    It "Removes the `"TestConnection`" Connection, even if it does not exist." {
-        { Remove-MyRMConnection -Name "TestConnection" } | Should -Throw
+    It "Removes the `"TstConnection0`" Connection even if it does not exist, and fails." {
+        { Remove-MyRMConnection -Name "TstConnection0" } | Should -Throw
     }
 }
