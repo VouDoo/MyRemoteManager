@@ -9,7 +9,7 @@ $Build = Join-Path -Path $PSScriptRoot -ChildPath "Build"
 
 $Header = Get-Item -Path "$Source\$ModuleName.Header.ps1"
 $Classes = Get-ChildItem -Path "$Source\Classes\*.ps1" -Exclude "*.Tests.*" | Sort-Object Name
-$PrivateFunctions = Get-ChildItem -Path "$Source\Private\*.ps1" -Exclude "*.Tests.*"
+#$PrivateFunctions = Get-ChildItem -Path "$Source\Private\*.ps1" -Exclude "*.Tests.*"
 $PublicFunctions = Get-ChildItem -Path "$Source\Public\*.ps1" -Exclude "*.Tests.*"
 $Aliases = Get-Item -Path "$Source\$ModuleName.Aliases.ps1"
 
@@ -47,13 +47,13 @@ $Classes | ForEach-Object {
 }
 Add-Content @ModuleFile -Value "#endregion Classes`n"
 
-# Add private functions
-Add-Content @ModuleFile -Value "#region Private functions"
-$PrivateFunctions | ForEach-Object {
-    Write-Information -MessageData ("[build][module] Add private function {0}." -f $_.Basename)
-    Add-Content @ModuleFile -Value (Get-Content -Path $_.FullName)
-}
-Add-Content @ModuleFile -Value "#endregion Private functions`n"
+## Add private functions
+#Add-Content @ModuleFile -Value "#region Private functions"
+#$PrivateFunctions | ForEach-Object {
+#    Write-Information -MessageData ("[build][module] Add private function {0}." -f $_.Basename)
+#    Add-Content @ModuleFile -Value (Get-Content -Path $_.FullName)
+#}
+#Add-Content @ModuleFile -Value "#endregion Private functions`n"
 
 # Add public functions
 Add-Content @ModuleFile -Value "#region Public functions"
