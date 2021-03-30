@@ -11,7 +11,7 @@ function Add-MyRMClient {
 
         [Parameter(
             Mandatory = $true,
-            HelpMessage = "Executable to run as client."
+            HelpMessage = "Path to the executable to run as client."
         )]
         [ValidateNotNullOrEmpty()]
         [string] $Executable,

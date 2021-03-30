@@ -31,7 +31,7 @@ function Add-MyRMConnection {
         [string] $Client,
 
         [Parameter(
-            HelpMessage = "Short description of the client."
+            HelpMessage = "Short description of the connection."
         )]
         [string] $Description,
 
