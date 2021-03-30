@@ -30,7 +30,8 @@ function New-MyRMInventory {
             $Inventory.AddClient(
                 (New-Object -TypeName Client -ArgumentList @(
                         "SSH",
-                        "C:\Windows\System32\OpenSSH\ssh.exe -p <port> <host>",
+                        "C:\Windows\System32\OpenSSH\ssh.exe",
+                        "-l <user> -p <port> <host>",
                         22,
                         "OpenSSH from Microsoft Windows feature."
                     )
@@ -39,7 +40,8 @@ function New-MyRMInventory {
             $Inventory.AddClient(
                 (New-Object -TypeName Client -ArgumentList @(
                         "RD",
-                        "C:\Windows\System32\mstsc.exe /v:<host>:<port> /fullscreen",
+                        "C:\Windows\System32\mstsc.exe",
+                        "/v:<host>:<port> /fullscreen",
                         3389,
                         "Microsoft Remote Desktop."
                     )

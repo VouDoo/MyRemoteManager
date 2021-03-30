@@ -20,21 +20,23 @@ class Inventory {
 
     [void] ReadFile() {
         $Items = Get-Content -Path $this.Path -Raw -Encoding ([Inventory]::Encoding) | ConvertFrom-Json -AsHashtable
-        $Items.Clients | ForEach-Object -Process {
+        foreach ($c in $Items.Clients) {
             $this.Clients += New-Object -TypeName Client -ArgumentList @(
-                $_.Name,
-                $_.Command,
-                $_.DefaultPort,
-                $_.Description
+                $c.Name,
+                $c.Executable,
+                $c.TokenizedArgs,
+                $c.DefaultPort,
+                $c.Description
             )
         }
-        $Items.Connections | ForEach-Object -Process {
+        foreach ($c in $Items.Connections) {
+            $Client = $this.Clients | Where-Object { $_.Name -eq $c.Client }
             $this.Connections += New-Object -TypeName Connection -ArgumentList @(
-                $_.Name,
-                $_.Hostname,
-                $_.Port,
-                $_.ClientName,
-                $_.Description
+                $c.Name,
+                $c.Hostname,
+                $c.Port,
+                $Client,
+                $c.Description
             )
         }
     }
@@ -45,7 +47,9 @@ class Inventory {
             $Items.Clients += $c.Splat()
         }
         foreach ($c in $this.Connections) {
-            $Items.Connections += $c.Splat()
+            $Connection = $c.Splat()
+            $Connection.Client = $Connection.Client.Name
+            $Items.Connections += $Connection
         }
         $Json = ConvertTo-Json -InputObject $Items -Depth 3
         $BackupPath = "{0}.backup" -f $this.Path
@@ -61,6 +65,14 @@ class Inventory {
 
     [bool] ConnectionExists([string] $Name) {
         return $(if (($this.Connections | Where-Object { $_.Name -eq $Name }).Count -gt 0) { $true } else { $false })
+    }
+
+    [Client] GetClient([string] $Name) {
+        return $this.Clients | Where-Object { $_.Name -eq $Name }
+    }
+
+    [Connection] GetConnection([string] $Name) {
+        return $this.Connections | Where-Object { $_.Name -eq $Name }
     }
 
     [void] AddClient([Client] $Client) {

@@ -4,23 +4,47 @@ class Connection : Item {
     [string] $Hostname
     # Port
     [UInt16] $Port
-    # Client name
-    [ValidateLength(1, 10)]
-    [ValidatePattern("^([a-zA-Z0-9]+)$")]
-    [string] $ClientName
+    # Client
+    [Client] $Client
 
     Connection(
         [String] $Name,
         [String] $Hostname,
         [UInt16] $Port,
-        [string] $ClientName,
+        [Client] $Client,
         [string] $Description
     ) {
         $this.Name = $Name
         $this.Hostname = $Hostname.ToLower()
         $this.Port = $Port
-        $this.ClientName = $ClientName
+        $this.Client = $Client
         $this.Description = $Description
+    }
+
+    [string] GenerateArgs() {
+        return $this.Client.TokenizedArgs.Replace(
+            "<host>", $this.Hostname
+        ).Replace(
+            "<port>", $(if ($this.Port -eq 0) { $this.DefaultPort } else { $this.Port })
+        )
+    }
+
+    [string] GenerateArgs([string] $User) {
+        return $this.GenerateArgs().Replace(
+            "<user>", $User
+        )
+    }
+
+    [void] Invoke() {
+        $FilePath = $this.Client.Executable
+        if ([Client]::UserTokenExists($this.Client.TokenizedArgs)) {
+            $User = Read-Host -Prompt ("Username" -f $this.Hostname)
+            $Arguments = $this.GenerateArgs($User)
+        }
+        else {
+            $Arguments = $this.GenerateArgs()
+        }
+        Start-Process -FilePath $FilePath -ArgumentList $Arguments
     }
 
     [string] ToString() {
@@ -29,6 +53,6 @@ class Connection : Item {
             $this.Description, `
             $this.Hostname, `
             $this.Port.ToString().Replace("0", "default"), `
-            $this.ClientName
+            $this.Client.Name
     }
 }

@@ -17,13 +17,7 @@ function Invoke-MyRMConnection {
     }
     process {
         $Connection = $Inventory.Connections | Where-Object { $_.Name -eq $Name }
-        $Client = $Inventory.Clients | Where-Object { $_.Name -eq $Connection.ClientName }
-        if ($Connection.Port -eq 0) {
-            Invoke-Expression -Command $Client.GenerateCommand($Connection.Hostname)
-        }
-        else {
-            Invoke-Expression -Command $Client.GenerateCommand($Connection.Hostname, $Connection.Port)
-        }
+        $Connection.Invoke()
     }
     end {}
 }

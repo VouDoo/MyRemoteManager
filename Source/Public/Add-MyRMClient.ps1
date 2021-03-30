@@ -11,10 +11,17 @@ function Add-MyRMClient {
 
         [Parameter(
             Mandatory = $true,
-            HelpMessage = "Command to execute when calling the client. It must contain the following template token."
+            HelpMessage = "Executable to run as client."
         )]
         [ValidateNotNullOrEmpty()]
-        [string] $Command,
+        [string] $Executable,
+
+        [Parameter(
+            Mandatory = $true,
+            HelpMessage = "Arguments as a tokenized string. Please, read the documentation to get the list of tokens."
+        )]
+        [ValidateNotNullOrEmpty()]
+        [string] $Arguments,
 
         [Parameter(
             Mandatory = $true,
@@ -41,7 +48,8 @@ function Add-MyRMClient {
         $Inventory.AddClient(
             (New-Object -TypeName Client -ArgumentList @(
                     $Name,
-                    $Command,
+                    $Executable,
+                    $Arguments,
                     $DefaultPort,
                     $Description
                 )
