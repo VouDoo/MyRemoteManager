@@ -27,7 +27,7 @@ function Add-MyRMConnection {
             HelpMessage = "Client to use to connect to the remote host."
         )]
         [ValidateNotNullOrEmpty()]
-        #[ValidateSet( [ValidateClientName] )]
+        [ValidateSet( [ValidateClientName] )]
         [string] $Client,
 
         [Parameter(
