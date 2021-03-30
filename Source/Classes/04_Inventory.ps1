@@ -82,7 +82,6 @@ class Inventory {
         else {
             $this.Clients += $Client
         }
-
     }
 
     [void] AddConnection([Connection] $Connection) {
