@@ -79,7 +79,7 @@ Copy-Item -Path "$Source\$ModuleName.psd1" -Destination "$Build\$ModuleName.psd1
 
 # Copy Update manifest
 Write-Information -MessageData "[build][manifest] Update manifest."
-Update-ModuleManifest -Path "$Build\$ModuleName.psd1" -FunctionsToExport $PublicFunctions.BaseName
+Update-ModuleManifest -Path "$Build\$ModuleName.psd1" -CmdletsToExport $PublicFunctions.BaseName
 
 Write-Information -MessageData "[build][manifest] Done."
 #endregion Copy and update manifest
