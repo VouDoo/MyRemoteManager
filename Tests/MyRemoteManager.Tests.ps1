@@ -34,7 +34,8 @@ Describe "Add-MyRMClient" {
     It "Adds a client." {
         $Arguments = @{
             Name        = "TstClient1"
-            Command     = "client -p <port> <host>"
+            Executable  = "client.exe"
+            Arguments   = "-p <port> <host>"
             DefaultPort = 1234
             Description = "A test client."
         }
@@ -44,7 +45,8 @@ Describe "Add-MyRMClient" {
     It "Adds another client." {
         $Arguments = @{
             Name        = "TstClient2"
-            Command     = "client.exe <host> -p <port>"
+            Executable  = "client.exe"
+            Arguments   = "-p <port> <host>"
             DefaultPort = 5678
         }
         $TestClient = Add-MyRMClient @Arguments -PassThru
@@ -53,7 +55,8 @@ Describe "Add-MyRMClient" {
     It "Adds a client with an already used name, and fails." {
         $Arguments = @{
             Name        = "TstClient2"
-            Command     = "client -p <port> <host>"
+            Executable  = "client.exe"
+            Arguments   = "-p <port> <host>"
             DefaultPort = 2468
         }
         { Add-MyRMClient @Arguments -PassThru } | Should -Throw -ExpectedMessage "Cannot add Client `"TstClient2`" as it already exists."
@@ -61,7 +64,8 @@ Describe "Add-MyRMClient" {
     It "Adds a client without a required token in the command, and fails." {
         $Arguments = @{
             Name        = "TstClient3"
-            Command     = "client -p <prot> <host>"
+            Executable  = "client.exe"
+            Arguments   = "-p <prot> <host>"
             DefaultPort = 1234
         }
         { Add-MyRMClient @Arguments -PassThru } | Should -Throw -ExpectedMessage "*The command does not contain the following token: port*"
@@ -71,33 +75,39 @@ Describe "Add-MyRMConnection" {
     BeforeAll {
         $Env:MY_RM_INVENTORY = Join-Path -Path $TestDrive -ChildPath "MyRemoteManager.json"
         New-MyRMInventory
-        Add-MyRMClient -Name "TestClient" -Command "client -p <port> <host>" -DefaultPort 1234
+        $ClientArgs = @{
+            Name        = "TestClient"
+            Executable  = "client.exe"
+            Arguments   = "-p <port> <host>"
+            DefaultPort = 1234
+        }
+        Add-MyRMClient @ClientArgs
     }
     It "Adds a connection." {
         $Arguments = @{
             Name        = "TestConnection1"
             Hostname    = "Hostname.test"
             Port        = 1234
-            ClientName  = "TestClient"
+            Client      = "TestClient"
             Description = "A test connection."
         }
         Add-MyRMConnection @Arguments -PassThru | Should -Be "TestConnection1"
     }
     It "Adds another connection." {
         $Arguments = @{
-            Name       = "TestConnection2"
-            Hostname   = "Hostname.test"
-            Port       = 5678
-            ClientName = "TestClient"
+            Name     = "TestConnection2"
+            Hostname = "Hostname.test"
+            Port     = 5678
+            Client   = "TestClient"
         }
         Add-MyRMConnection @Arguments -PassThru | Should -Be "TestConnection2"
     }
     It "Adds a connection with an already used name, and fails." {
         $Arguments = @{
-            Name       = "TestConnection2"
-            Hostname   = "Hostname.test"
-            Port       = 2468
-            ClientName = "TestClient"
+            Name     = "TestConnection2"
+            Hostname = "Hostname.test"
+            Port     = 2468
+            Client   = "TestClient"
         }
         { Add-MyRMConnection @Arguments -PassThru } | Should -Throw -ExpectedMessage "Cannot add Connection `"TestConnection2`" as it already exists."
     }
@@ -108,13 +118,13 @@ Describe "Remove-MyRMClient" {
         New-MyRMInventory
     }
     BeforeEach {
-        $TestClientArguments = @{
+        $ClientArgs = @{
             Name        = "TestClient"
-            Command     = "client -p <port> <host>"
+            Executable  = "client.exe"
+            Arguments   = "-p <port> <host>"
             DefaultPort = 1234
-            Description = "A test client."
         }
-        Add-MyRMClient @TestClientArguments
+        Add-MyRMClient @ClientArgs
     }
     It "Removes the `"TestClient`" Client" {
         Remove-MyRMClient -Name "TestClient" | Should -Be $null
@@ -127,14 +137,20 @@ Describe "Remove-MyRMConnection" {
     BeforeAll {
         $Env:MY_RM_INVENTORY = Join-Path -Path $TestDrive -ChildPath "MyRemoteManager.json"
         New-MyRMInventory
-        Add-MyRMClient -Name "TestClient" -Command "client -p <port> <host>" -DefaultPort 1234
+        $ClientArgs = @{
+            Name        = "TestClient"
+            Executable  = "client.exe"
+            Arguments   = "-p <port> <host>"
+            DefaultPort = 1234
+        }
+        Add-MyRMClient @ClientArgs
     }
     BeforeEach {
         $TestConnectionArguments = @{
             Name        = "TestConnection"
             Hostname    = "Hostname.test"
             Port        = 1234
-            ClientName  = "TestClient"
+            Client      = "TestClient"
             Description = "A test connection."
         }
         Add-MyRMConnection @TestConnectionArguments
