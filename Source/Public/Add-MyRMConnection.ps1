@@ -1,6 +1,6 @@
 function Add-MyRMConnection {
     [OutputType([string])]
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [Parameter(
             Mandatory = $true,
@@ -45,18 +45,21 @@ function Add-MyRMConnection {
         $Inventory.ReadFile()
     }
     process {
-        $Inventory.AddConnection(
-            (New-Object -TypeName Connection -ArgumentList @(
-                    $Name,
-                    $Hostname,
-                    $Port,
-                    $Inventory.GetClient($Client),
-                    $Description
-                )
-            )
+        $Connection = New-Object -TypeName Connection -ArgumentList @(
+            $Name,
+            $Hostname,
+            $Port,
+            $Inventory.GetClient($Client),
+            $Description
         )
-        $Inventory.SaveFile()
-        Write-Verbose -Message ("Connection `"{0}`" has been added to the inventory." -f $Name)
+        $Inventory.AddConnection($Connection)
+        if ($PSCmdlet.ShouldProcess("Target", "Operation")) {
+            $Inventory.SaveFile()
+            Write-Verbose -Message ("Connection `"{0}`" has been added to the inventory." -f $Name)
+        }
+        else {
+            Write-Verbose -Message ("Add Connection `"{0}`" to the inventory." -f $Connection.ToString())
+        }
     }
     end {
         if ($PassThru.IsPresent) {

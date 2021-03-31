@@ -1,6 +1,6 @@
 function Remove-MyRMClient {
     [OutputType([void])]
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [Parameter(
             Position = 0,
@@ -17,8 +17,13 @@ function Remove-MyRMClient {
     }
     process {
         $Inventory.RemoveClient($Name)
-        $Inventory.SaveFile()
-        Write-Verbose -Message ("Client `"{0}`" has been removed from the inventory." -f $Name)
+        if ($PSCmdlet.ShouldProcess("Target", "Operation")) {
+            $Inventory.SaveFile()
+            Write-Verbose -Message ("Client `"{0}`" has been removed from the inventory." -f $Name)
+        }
+        else {
+            Write-Verbose -Message ("Remove Client `"{0}`" from the inventory." -f $Client.ToString())
+        }
     }
     end {}
 }

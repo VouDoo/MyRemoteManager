@@ -1,6 +1,6 @@
 function New-MyRMInventory {
     [OutputType([string])]
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [Parameter(
             HelpMessage = "Do not add defaults clients."
@@ -48,8 +48,13 @@ function New-MyRMInventory {
                 )
             )
         }
-        $Inventory.SaveFile()
-        Write-Verbose -Message ("Inventory file has been created: {0}" -f $Inventory.Path)
+        if ($PSCmdlet.ShouldProcess("Target", "Operation")) {
+            $Inventory.SaveFile()
+            Write-Verbose -Message ("Inventory file has been created: {0}" -f $Inventory.Path)
+        }
+        else {
+            Write-Verbose -Message ("Create inventory file to `"{0}`"." -f $Inventory.Path)
+        }
     }
     end {
         if ($PassThru.IsPresent) {

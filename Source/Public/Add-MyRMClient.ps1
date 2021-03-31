@@ -1,6 +1,6 @@
 function Add-MyRMClient {
     [OutputType([string])]
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [Parameter(
             Mandatory = $true,
@@ -45,18 +45,21 @@ function Add-MyRMClient {
         $Inventory.ReadFile()
     }
     process {
-        $Inventory.AddClient(
-            (New-Object -TypeName Client -ArgumentList @(
-                    $Name,
-                    $Executable,
-                    $Arguments,
-                    $DefaultPort,
-                    $Description
-                )
-            )
+        $Client = New-Object -TypeName Client -ArgumentList @(
+            $Name,
+            $Executable,
+            $Arguments,
+            $DefaultPort,
+            $Description
         )
-        $Inventory.SaveFile()
-        Write-Verbose -Message ("Client `"{0}`" has been added to the inventory." -f $Name)
+        $Inventory.AddClient($Client)
+        if ($PSCmdlet.ShouldProcess("Target", "Operation")) {
+            $Inventory.SaveFile()
+            Write-Verbose -Message ("Client `"{0}`" has been added to the inventory." -f $Name)
+        }
+        else {
+            Write-Verbose -Message ("Add Client `"{0}`" to the inventory." -f $Client.ToString())
+        }
     }
     end {
         if ($PassThru.IsPresent) {
