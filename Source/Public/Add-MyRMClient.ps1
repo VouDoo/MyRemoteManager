@@ -52,13 +52,15 @@ function Add-MyRMClient {
             $DefaultPort,
             $Description
         )
-        $Inventory.AddClient($Client)
-        if ($PSCmdlet.ShouldProcess("Target", "Operation")) {
+        if (
+            $PSCmdlet.ShouldProcess(
+                "Inventory file {0}" -f $Inventory.Path,
+                "Add Client {0}" -f $Client.ToString()
+            )
+        ) {
+            $Inventory.AddClient($Client)
             $Inventory.SaveFile()
             Write-Verbose -Message ("Client `"{0}`" has been added to the inventory." -f $Name)
-        }
-        else {
-            Write-Verbose -Message ("Add Client `"{0}`" to the inventory." -f $Client.ToString())
         }
     }
     end {

@@ -16,13 +16,15 @@ function Remove-MyRMClient {
         $Inventory.ReadFile()
     }
     process {
-        $Inventory.RemoveClient($Name)
-        if ($PSCmdlet.ShouldProcess("Target", "Operation")) {
+        if (
+            $PSCmdlet.ShouldProcess(
+                "Inventory file {0}" -f $Inventory.Path,
+                "Remove Client {0}" -f $Name
+            )
+        ) {
+            $Inventory.RemoveClient($Name)
             $Inventory.SaveFile()
             Write-Verbose -Message ("Client `"{0}`" has been removed from the inventory." -f $Name)
-        }
-        else {
-            Write-Verbose -Message ("Remove Client `"{0}`" from the inventory." -f $Client.ToString())
         }
     }
     end {}

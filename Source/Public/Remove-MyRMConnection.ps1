@@ -16,13 +16,15 @@ function Remove-MyRMConnection {
         $Inventory.ReadFile()
     }
     process {
-        $Inventory.RemoveConnection($Name)
-        if ($PSCmdlet.ShouldProcess("Target", "Operation")) {
+        if (
+            $PSCmdlet.ShouldProcess(
+                "Inventory file {0}" -f $Inventory.Path,
+                "Remove Connection {0}" -f $Name
+            )
+        ) {
+            $Inventory.RemoveConnection($Name)
             $Inventory.SaveFile()
             Write-Verbose -Message ("Connection `"{0}`" has been removed from the inventory." -f $Name)
-        }
-        else {
-            Write-Verbose -Message ("Remove Connection `"{0}`" from the inventory." -f $Connection.ToString())
         }
     }
     end {}

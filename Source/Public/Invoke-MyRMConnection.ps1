@@ -1,6 +1,6 @@
 function Invoke-MyRMConnection {
     [OutputType([void])]
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [Parameter(
             Position = 0,
@@ -17,7 +17,9 @@ function Invoke-MyRMConnection {
     }
     process {
         $Connection = $Inventory.Connections | Where-Object { $_.Name -eq $Name }
-        $Connection.Invoke()
+        if ($PSCmdlet.ShouldProcess($Connection.ToString(), "Initiate connection")) {
+            $Connection.Invoke()
+        }
     }
     end {}
 }

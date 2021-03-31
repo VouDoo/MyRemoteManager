@@ -26,34 +26,31 @@ function New-MyRMInventory {
                 [System.IO.IOException] "Inventory file already exists. Use `"-Force`" to overwrite it."
             )
         }
-        if (-not $NoDefaultClients.IsPresent) {
-            $Inventory.AddClient(
-                (New-Object -TypeName Client -ArgumentList @(
-                        "SSH",
-                        "C:\Windows\System32\OpenSSH\ssh.exe",
-                        "-l <user> -p <port> <host>",
-                        22,
-                        "OpenSSH from Microsoft Windows feature"
+        if ($PSCmdlet.ShouldProcess($Inventory.Path, "Create inventory file")) {
+            if (-not $NoDefaultClients.IsPresent) {
+                $Inventory.AddClient(
+                    (New-Object -TypeName Client -ArgumentList @(
+                            "SSH",
+                            "C:\Windows\System32\OpenSSH\ssh.exe",
+                            "-l <user> -p <port> <host>",
+                            22,
+                            "OpenSSH from Microsoft Windows feature"
+                        )
                     )
                 )
-            )
-            $Inventory.AddClient(
-                (New-Object -TypeName Client -ArgumentList @(
-                        "RD",
-                        "C:\Windows\System32\mstsc.exe",
-                        "/v:<host>:<port> /fullscreen",
-                        3389,
-                        "Microsoft Remote Desktop"
+                $Inventory.AddClient(
+                    (New-Object -TypeName Client -ArgumentList @(
+                            "RD",
+                            "C:\Windows\System32\mstsc.exe",
+                            "/v:<host>:<port> /fullscreen",
+                            3389,
+                            "Microsoft Remote Desktop"
+                        )
                     )
                 )
-            )
-        }
-        if ($PSCmdlet.ShouldProcess("Target", "Operation")) {
+            }
             $Inventory.SaveFile()
             Write-Verbose -Message ("Inventory file has been created: {0}" -f $Inventory.Path)
-        }
-        else {
-            Write-Verbose -Message ("Create inventory file to `"{0}`"." -f $Inventory.Path)
         }
     }
     end {

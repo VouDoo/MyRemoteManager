@@ -52,13 +52,14 @@ function Add-MyRMConnection {
             $Inventory.GetClient($Client),
             $Description
         )
-        $Inventory.AddConnection($Connection)
-        if ($PSCmdlet.ShouldProcess("Target", "Operation")) {
+        if ($PSCmdlet.ShouldProcess(
+                "Inventory file {0}" -f $Inventory.Path,
+                "Add Connection {0}" -f $Connection.ToString()
+            )
+        ) {
+            $Inventory.AddConnection($Connection)
             $Inventory.SaveFile()
             Write-Verbose -Message ("Connection `"{0}`" has been added to the inventory." -f $Name)
-        }
-        else {
-            Write-Verbose -Message ("Add Connection `"{0}`" to the inventory." -f $Connection.ToString())
         }
     }
     end {
