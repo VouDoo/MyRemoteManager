@@ -25,7 +25,7 @@ class Connection : Item {
         return $this.Client.TokenizedArgs.Replace(
             "<host>", $this.Hostname
         ).Replace(
-            "<port>", $(if ($this.Port -eq 0) { $this.DefaultPort } else { $this.Port })
+            "<port>", $(if ($this.Port -eq 0) { $this.Client.DefaultPort } else { $this.Port })
         )
     }
 
