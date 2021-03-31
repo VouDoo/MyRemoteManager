@@ -33,7 +33,7 @@ function New-MyRMInventory {
                         "C:\Windows\System32\OpenSSH\ssh.exe",
                         "-l <user> -p <port> <host>",
                         22,
-                        "OpenSSH from Microsoft Windows feature."
+                        "OpenSSH from Microsoft Windows feature"
                     )
                 )
             )
@@ -43,7 +43,7 @@ function New-MyRMInventory {
                         "C:\Windows\System32\mstsc.exe",
                         "/v:<host>:<port> /fullscreen",
                         3389,
-                        "Microsoft Remote Desktop."
+                        "Microsoft Remote Desktop"
                     )
                 )
             )
