@@ -34,9 +34,10 @@ class Client : Item {
     }
 
     [string] ToString() {
-        return "{0} ({1}) - {2}" -f `
+        return "{0} ({1}): {2} {3}" -f `
             $this.Name, `
             $this.Description, `
+            $this.Executable, `
             $this.TokenizedArgs.Replace("<port>", "<port:{0}>" -f $this.DefaultPort)
     }
 }

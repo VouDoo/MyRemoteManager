@@ -48,11 +48,11 @@ class Connection : Item {
     }
 
     [string] ToString() {
-        return "{0} ({1}) - {2}:{3} with {4}" -f `
+        return "{0} ({1}): {2} to {3}:{4}" -f `
             $this.Name, `
             $this.Description, `
+            $this.Client.Name, `
             $this.Hostname, `
-            $this.Port.ToString().Replace("0", "default"), `
-            $this.Client.Name
+            $this.Port.ToString().Replace("0", "default")
     }
 }
