@@ -1,4 +1,4 @@
-function Get-MyRMConnection {
+function Get-MyRMClient {
     [OutputType([PSCustomObject[]])]
     [CmdletBinding()]
     param (
@@ -14,20 +14,20 @@ function Get-MyRMConnection {
         $Inventory.ReadFile()
     }
     process {
-        $Connections = @()
-        foreach ($c in $Inventory.Connections) {
-            $Connections += [PSCustomObject] @{
+        $Clients = @()
+        foreach ($c in $Inventory.Clients) {
+            $Clients += [PSCustomObject] @{
                 Name        = $c.Name
                 Command     = "{0} {1}" -f $c.Executable, $c.TokenizedArgs
                 DefaultPort = $c.DefaultPort
                 Description = $c.Description
             }
         }
-        $Connections = $Connections | Where-Object {
+        $Clients = $Clients | Where-Object {
             $_.Name -like $Name
         } | Sort-Object -Property Name
     }
     end {
-        $Connections
+        $Clients
     }
 }
