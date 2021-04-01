@@ -13,6 +13,8 @@ function Set-MyRMInventoryPath {
     .OUTPUTS
         System.Void. None.
     .EXAMPLE
+        PS> Set-MyRMInventoryPath C:\MyCustomInventory.json
+    .EXAMPLE
         PS> Set-MyRMInventoryPath -Path C:\MyCustomInventory.json
     #>
 
