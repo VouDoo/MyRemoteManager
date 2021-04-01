@@ -71,3 +71,9 @@ The inventory file contains the following items:
 ## CmdKey
 
 See <https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/cmdkey>
+
+## Readme file
+
+Add instructions for argument tokens.
+Say if they are optionnal or mandatory.
+Put their details in a markdown table (a bit like a Docker envvar documentation).
