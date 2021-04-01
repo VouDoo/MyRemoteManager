@@ -12,7 +12,7 @@
     RootModule           = 'MyRemoteManager.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.0.1'
+    ModuleVersion        = '0.1.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -24,7 +24,7 @@
     Author               = 'Maxence Grymonprez'
 
     # Company or vendor of this module
-    CompanyName          = ''
+    #CompanyName          = ''
 
     # Copyright statement for this module
     Copyright            = 'Copyright (c) 2021 by Maxence Grymonprez, licensed under MIT License.'

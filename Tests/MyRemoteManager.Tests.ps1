@@ -1,5 +1,5 @@
 BeforeAll {
-    $ModulePath = Join-Path -Path (Get-Item $PSScriptRoot).parent.FullName -ChildPath "Build\MyRemoteManager.psm1"
+    $ModulePath = $env:PESTER_FILE_TO_TEST
     Write-Debug -Message "Module Path: $ModulePath"
     Import-Module -Name $ModulePath -Force
 }

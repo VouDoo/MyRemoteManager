@@ -6,20 +6,32 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "./Build-Module.ps1 -InformationAction Continue",
+            "command": "./build.ps1 Build",
+            "problemMatcher": []
+        },
+        {
+            "label": "build-bootstrap",
+            "type": "shell",
+            "command": "./build.ps1 -Bootstrap Build",
             "problemMatcher": []
         },
         {
             "label": "test",
             "type": "shell",
-            "command": "./Test-Module.ps1",
+            "command": "./build.ps1 Test",
             "problemMatcher": []
         },
         {
-            "label": "psake",
+            "label": "test-bootstrap",
             "type": "shell",
-            "command": "./Start-psake.ps1",
+            "command": "./build.ps1 -Bootstrap Test",
             "problemMatcher": []
         },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "./build.ps1 Clean",
+            "problemMatcher": []
+        }
     ]
 }
