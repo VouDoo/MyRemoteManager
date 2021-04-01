@@ -1,5 +1,37 @@
 function New-MyRMInventory {
-    [OutputType([string])]
+
+    <#
+    .SYNOPSIS
+        Creates MyRemoteManager inventory file.
+    .DESCRIPTION
+        Creates a new inventory file where MyRemoteManager saves items.
+    .PARAMETER NoDefaultClients
+        Does not add defaults clients to the new inventory.
+    .PARAMETER Force
+        Overwrites existing inventory file.
+    .PARAMETER PassThru
+        Indicates that the cmdlet sends items from the interactive window down the pipeline as input to other commands.
+    .INPUTS
+        None. You cannot pipe objects to New-MyRMInventory.
+    .OUTPUTS
+        System.Void. None.
+            or if PassThru is set,
+        System.String. New-MyRMInventory returns a string with the path to the created inventory.
+    .EXAMPLE
+        PS> New-MyRMInventory
+    .EXAMPLE
+        PS> New-MyRMInventory -NoDefaultClients
+    .EXAMPLE
+        PS> New-MyRMInventory -Force
+    .EXAMPLE
+        PS> New-MyRMInventory -PassThru
+        C:\Users\MyUsername\MyRemoteManager.json
+    .EXAMPLE
+        PS> New-MyRMInventory -NoDefaultClients -Force -PassThru
+        C:\Users\MyUsername\MyRemoteManager.json
+    #>
+
+    [OutputType([void])]
     [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [Parameter(

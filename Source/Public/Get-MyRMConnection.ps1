@@ -1,4 +1,25 @@
 function Get-MyRMConnection {
+
+    <#
+    .SYNOPSIS
+        Gets MyRemoteManager connections.
+    .DESCRIPTION
+        Gets available connections from the MyRemoteManager inventory file.
+        connections can be filtered by their name and/or client name.
+    .PARAMETER Name
+        Filters connections by name.
+    .INPUTS
+        None. You cannot pipe objects to Get-MyRMConnection.
+    .OUTPUTS
+        PSCustomObject. Get-MyRMConnection returns objects with details of the available connections.
+    .EXAMPLE
+        PS> Get-MyRMConnection
+        (shows objects)
+    .EXAMPLE
+        PS> Get-MyRMConnection -Name "myproject_*" -Client "*_myproject"
+        (shows filtered objects)
+    #>
+
     [OutputType([PSCustomObject[]])]
     [CmdletBinding()]
     param (

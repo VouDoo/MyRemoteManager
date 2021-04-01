@@ -1,5 +1,39 @@
 function Add-MyRMConnection {
-    [OutputType([string])]
+
+    <#
+    .SYNOPSIS
+        Adds MyRemoteManager connection.
+    .DESCRIPTION
+        Adds connection entry to the MyRemoteManager inventory file.
+    .PARAMETER Name
+        Name of the connection.
+    .PARAMETER Hostname
+        Name of the remote host.
+    .PARAMETER Port
+        Port to connect to on the remote host.
+        If not set, it will use the default port of the client.
+    .PARAMETER Client
+        Name of the client.
+    .PARAMETER Description
+        Short description for the connection.
+    .PARAMETER PassThru
+        Indicates that the cmdlet sends items from the interactive window down the pipeline as input to other commands.
+    .INPUTS
+        None. You cannot pipe objects to Add-MyRMConnection.
+    .OUTPUTS
+        System.Void. None.
+            or if PassThru is set,
+        System.String. Add-MyRMConnection returns a string with the name of the added connection.
+    .EXAMPLE
+        PS> Add-MyRMConnection -Name myconn -Hostname myhost -Client SSH
+    .EXAMPLE
+        PS> Add-MyRMConnection -Name myconn -Hostname myhost -Port 2222 -Client SSH -Description "My connection"
+    .EXAMPLE
+        PS> Add-MyRMConnection -Name myconn -Hostname myhost -Client SSH -PassThru
+        myconn
+    #>
+
+    [OutputType([void])]
     [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [Parameter(
