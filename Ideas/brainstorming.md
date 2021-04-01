@@ -82,3 +82,7 @@ Put their details in a markdown table (a bit like a Docker envvar documentation)
 
 Alias was initially included in the module.
 It might be better to exclude them and add in the readme file instructions if the user want to set them in his own profile.
+
+## Project structure (01/04/2021)
+
+Good example here <https://github.com/psake/PowerShellBuild>
