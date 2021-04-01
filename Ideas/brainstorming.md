@@ -1,10 +1,10 @@
-# Brainstorming
+# Brainstorming notes
 
-## Why?
+## Why? (initial)
 
 MyRemoteManager is a PowerShell module that provides functions to manage and initiate remote connections.
 
-## Inventory
+## Inventory (initial)
 
 Connections are stored in an inventory file.
 
@@ -68,12 +68,17 @@ The inventory file contains the following items:
         - Description: Short description of the remote machine
 ```
 
-## CmdKey
+## CmdKey (initial)
 
 See <https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/cmdkey>
 
-## Readme file
+## Readme file (01/04/2021)
 
 Add instructions for argument tokens.
 Say if they are optionnal or mandatory.
 Put their details in a markdown table (a bit like a Docker envvar documentation).
+
+## Alias (01/04/2021)
+
+Alias was initially included in the module.
+It might be better to exclude them and add in the readme file instructions if the user want to set them in his own profile.
