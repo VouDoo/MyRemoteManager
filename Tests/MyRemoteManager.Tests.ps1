@@ -1,5 +1,6 @@
 BeforeAll {
     $ModulePath = Join-Path -Path (Get-Item $PSScriptRoot).parent.FullName -ChildPath "Build\MyRemoteManager.psm1"
+    Write-Debug -Message "Module Path: $ModulePath"
     Import-Module -Name $ModulePath -Force
 }
 Describe "New-MyRMInventory" {

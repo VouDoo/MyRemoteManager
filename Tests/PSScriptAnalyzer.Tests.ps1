@@ -1,5 +1,7 @@
-$ModulePath = Join-Path -Path (Get-Item $PSScriptRoot).parent.FullName -ChildPath "Build\MyRemoteManager.psm1"
-
+BeforeAll {
+    $ModulePath = Join-Path -Path (Get-Item $PSScriptRoot).parent.FullName -ChildPath "Build\MyRemoteManager.psm1"
+    Write-Debug -Message "Module Path: $ModulePath"
+}
 Describe 'Testing against PSScriptAnalyzer rules' {
     Context "PSScriptAnalyzer Standard Rules" {
         It "Should pass <IncludeRule>." -TestCases @(
