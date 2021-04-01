@@ -63,10 +63,6 @@ $PublicFunctions | ForEach-Object {
 }
 Add-Content @ModuleFile -Value "#endregion Public functions`n"
 
-# Add aliases
-Write-Information -MessageData "[build][module] Add aliases."
-Add-Content @ModuleFile -Value (Get-Content -Path $Aliases.FullName)
-
 Write-Information -MessageData "[build][module] Done."
 #endregion Build module file
 
