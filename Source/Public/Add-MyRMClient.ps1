@@ -34,7 +34,7 @@ function Add-MyRMClient {
         SSH
     #>
 
-    [OutputType([void])]
+    [OutputType([string])]
     [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [Parameter(

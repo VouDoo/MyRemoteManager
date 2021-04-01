@@ -33,7 +33,7 @@ function Add-MyRMConnection {
         myconn
     #>
 
-    [OutputType([void])]
+    [OutputType([string])]
     [CmdletBinding(SupportsShouldProcess = $true)]
     param (
         [Parameter(
