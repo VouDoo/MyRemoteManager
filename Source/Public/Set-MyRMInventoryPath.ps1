@@ -43,6 +43,7 @@ function Set-MyRMInventoryPath {
                 $Path,
                 [System.EnvironmentVariableTarget]::User
             )
+            Write-Verbose -Message ("User environment variable `"{0}`" has been set to `"{1}`"." -f $EnvVar, $Path)
         }
     }
     end {}
