@@ -6,8 +6,20 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "./build.ps1 -InformationAction Continue",
+            "command": "./Build-Module.ps1 -InformationAction Continue",
             "problemMatcher": []
-        }
+        },
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "./Test-Module.ps1",
+            "problemMatcher": []
+        },
+        {
+            "label": "psake",
+            "type": "shell",
+            "command": "./Start-psake.ps1",
+            "problemMatcher": []
+        },
     ]
 }
