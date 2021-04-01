@@ -11,7 +11,6 @@ $Header = Get-Item -Path "$Source\$ModuleName.Header.ps1"
 $Classes = Get-ChildItem -Path "$Source\Classes\*.ps1" -Exclude "*.Tests.*" | Sort-Object Name
 #$PrivateFunctions = Get-ChildItem -Path "$Source\Private\*.ps1" -Exclude "*.Tests.*"
 $PublicFunctions = Get-ChildItem -Path "$Source\Public\*.ps1" -Exclude "*.Tests.*"
-$Aliases = Get-Item -Path "$Source\$ModuleName.Aliases.ps1"
 
 Write-Information -MessageData "[build][start] --- build started ---"
 
