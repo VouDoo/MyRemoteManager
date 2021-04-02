@@ -11,30 +11,12 @@ class Inventory {
     static [string] $EnvVariable = "MY_RM_INVENTORY"
 
     static [string] GetPath() {
-        # TODO improve [Inventory]::GetPath()
-        # Get environment variable from process scope
-        $InventoryPath = [System.Environment]::GetEnvironmentVariable(
-            [Inventory]::EnvVariable,
-            [System.EnvironmentVariableTarget]::Process
-        )
-        if ($InventoryPath) {
-            return $InventoryPath
-        }
-        # Get environment variable from user scope
-        $InventoryPath = [System.Environment]::GetEnvironmentVariable(
-            [Inventory]::EnvVariable,
-            [System.EnvironmentVariableTarget]::User
-        )
-        if ($InventoryPath) {
-            return $InventoryPath
-        }
-        # Get environment variable from machine scope
-        $InventoryPath = [System.Environment]::GetEnvironmentVariable(
-            [Inventory]::EnvVariable,
-            [System.EnvironmentVariableTarget]::Machine
-        )
-        if ($InventoryPath) {
-            return $InventoryPath
+        foreach ($Target in @("Process", "User", "Machine")) {
+            $Value = [System.Environment]::GetEnvironmentVariable(
+                [Inventory]::EnvVariable,
+                [System.EnvironmentVariableTarget]::"$Target"
+            )
+            if ($Value) { return $Value }
         }
         return Join-Path $env:HOME -ChildPath "MyRemoteManager.json"
     }

@@ -52,19 +52,19 @@ Task Build -depends Init, Clean {
     "[build][module] Add header"
     Add-Content @ModuleFile -Value ((Get-Content -Path $Settings.SourceHeader.FullName) + "`n")
     Add-Content @ModuleFile -Value "#region Classes"
-    $Settings.SourceClasses | ForEach-Object {
+    $Settings.SourceClasses | ForEach-Object -Process {
         "[build][module] Add class {0}" -f $_.Basename
         Add-Content @ModuleFile -Value (Get-Content -Path $_.FullName)
     }
     Add-Content @ModuleFile -Value "#endregion Classes`n"
     #Add-Content @ModuleFile -Value "#region Private functions"
-    #$Settings.SourcePrivateFunctions | ForEach-Object {
+    #$Settings.SourcePrivateFunctions | ForEach-Object -Process {
     #    "[build][module] Add private function {0}" -f $_.Basename
     #    Add-Content @ModuleFile -Value (Get-Content -Path $_.FullName)
     #}
     #Add-Content @ModuleFile -Value "#endregion Private functions`n"
     Add-Content @ModuleFile -Value "#region Public functions"
-    $Settings.SourcePublicFunctions | ForEach-Object {
+    $Settings.SourcePublicFunctions | ForEach-Object -Process {
         "[build][module] Add public function {0}" -f $_.Basename
         Add-Content @ModuleFile -Value (Get-Content -Path $_.FullName)
     }

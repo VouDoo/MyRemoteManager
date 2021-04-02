@@ -9,6 +9,8 @@ function Set-MyRMInventoryPath {
         Path to the inventory file.
         This path is set in a environment variable.
         Pass an empty string or null to reset to the default path.
+    .PARAMETER Target
+        Target scope where the environment variable will be saved.
     .INPUTS
         None. You cannot pipe objects to Set-MyRMInventoryPath.
     .OUTPUTS
@@ -28,7 +30,14 @@ function Set-MyRMInventoryPath {
             HelpMessage = "Path to the inventory file."
         )]
         [AllowEmptyString()]
-        [string] $Path
+        [string] $Path,
+
+        [Parameter(
+            Mandatory = $false,
+            HelpMessage = "Target scope of the environment variable."
+        )]
+        [ValidateSet("Process", "User")]
+        [string] $Target = "User"
     )
     begin {
         $EnvVar = [Inventory]::EnvVariable
@@ -36,16 +45,16 @@ function Set-MyRMInventoryPath {
     process {
         if (
             $PSCmdlet.ShouldProcess(
-                "User environment variable {0}" -f $EnvVar,
+                ("{0} environment variable {1}" -f $Target, $EnvVar),
                 "Set value {0}" -f $Path
             )
         ) {
             [System.Environment]::SetEnvironmentVariable(
                 $EnvVar,
                 $Path,
-                [System.EnvironmentVariableTarget]::User
+                [System.EnvironmentVariableTarget]::"$Target"
             )
-            Write-Verbose -Message ("User environment variable `"{0}`" has been set to `"{1}`"." -f $EnvVar, $Path)
+            Write-Verbose -Message ("{0} environment variable `"{1}`" has been set to `"{2}`"." -f $Target, $EnvVar, $Path)
         }
     }
     end {}

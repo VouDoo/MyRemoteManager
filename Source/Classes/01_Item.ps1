@@ -9,7 +9,7 @@ class Item {
     [hashtable] Splat() {
         $Hashtable = @{}
         foreach ($p in $this.PSObject.Properties) {
-            $this.PSObject.Properties | ForEach-Object {
+            $this.PSObject.Properties | ForEach-Object -Process {
                 $Hashtable[$p.Name] = $p.Value
             }
         }
