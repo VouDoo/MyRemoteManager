@@ -67,12 +67,7 @@ function Add-MyRMConnection {
         [Parameter(
             HelpMessage = "Short description of the connection."
         )]
-        [string] $Description,
-
-        [Parameter(
-            HelpMessage = "Indicates that the cmdlet sends items from the interactive window down the pipeline as input to other commands."
-        )]
-        [switch] $PassThru
+        [string] $Description
     )
     begin {
         $Inventory = New-Object -TypeName Inventory
@@ -96,9 +91,5 @@ function Add-MyRMConnection {
             Write-Verbose -Message ("Connection `"{0}`" has been added to the inventory." -f $Name)
         }
     }
-    end {
-        if ($PassThru.IsPresent) {
-            $Name
-        }
-    }
+    end {}
 }

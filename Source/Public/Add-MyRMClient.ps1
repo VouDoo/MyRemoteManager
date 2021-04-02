@@ -68,12 +68,7 @@ function Add-MyRMClient {
         [Parameter(
             HelpMessage = "Short description of the client."
         )]
-        [string] $Description,
-
-        [Parameter(
-            HelpMessage = "Indicates that the cmdlet sends items from the interactive window down the pipeline as input to other commands."
-        )]
-        [switch] $PassThru
+        [string] $Description
     )
     begin {
         $Inventory = New-Object -TypeName Inventory
@@ -98,9 +93,5 @@ function Add-MyRMClient {
             Write-Verbose -Message ("Client `"{0}`" has been added to the inventory." -f $Name)
         }
     }
-    end {
-        if ($PassThru.IsPresent) {
-            $Name
-        }
-    }
+    end {}
 }
