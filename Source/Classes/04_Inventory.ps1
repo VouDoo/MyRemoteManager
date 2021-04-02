@@ -11,9 +11,12 @@ class Inventory {
     static [string] $EnvVarName = "MY_RM_INVENTORY"
 
     static [string] GetPath() {
-        $EnvPath = "Env:{0}" -f [Inventory]::EnvVarName
-        if (Test-Path -Path $EnvPath) {
-            return Get-ChildItem -Path $EnvPath | Select-Object -ExpandProperty Value
+        $InventoryPath = [System.Environment]::GetEnvironmentVariable(
+            [Inventory]::EnvVarName,
+            [System.EnvironmentVariableTarget]::User
+        )
+        if ($InventoryPath) {
+            return $InventoryPath
         }
         return Join-Path $env:HOME -ChildPath "MyRemoteManager.json"
     }
