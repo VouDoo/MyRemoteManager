@@ -84,9 +84,9 @@ Task Build -depends Init, Clean {
     Copy-Item -Path $Settings.SourceManifest -Destination $Settings.OutManifest
     "[build][manifest] Update manifest"
     $ModuleManifestParams = @{
-        Path            = $Settings.OutManifest
-        CmdletsToExport = $Settings.SourcePublicFunctions.BaseName
-        ModuleVersion   = $Settings.ModuleVersion
+        Path              = $Settings.OutManifest
+        FunctionsToExport = $Settings.SourcePublicFunctions.BaseName
+        ModuleVersion     = $Settings.ModuleVersion
     }
     Update-ModuleManifest @ModuleManifestParams
     "[build][manifest] Done"
