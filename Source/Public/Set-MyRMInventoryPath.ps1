@@ -26,6 +26,7 @@ function Set-MyRMInventoryPath {
             Mandatory = $true,
             HelpMessage = "Path to the inventory file."
         )]
+        [AllowEmptyString()]
         [string] $Path
     )
     begin {
