@@ -8,11 +8,11 @@ class Inventory {
     # Encoding for inventory file
     static [string] $Encoding = "utf-8"
     # Name of the environement variable to use a custom path to the inventory file
-    static [string] $EnvVarName = "MY_RM_INVENTORY"
+    static [string] $EnvVariable = "MY_RM_INVENTORY"
 
     static [string] GetPath() {
         $InventoryPath = [System.Environment]::GetEnvironmentVariable(
-            [Inventory]::EnvVarName,
+            [Inventory]::EnvVariable,
             [System.EnvironmentVariableTarget]::User
         )
         if ($InventoryPath) {

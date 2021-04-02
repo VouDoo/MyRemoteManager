@@ -30,7 +30,7 @@ function Set-MyRMInventoryPath {
         [string] $Path
     )
     begin {
-        $EnvVar = [Inventory]::EnvVarName
+        $EnvVar = [Inventory]::EnvVariable
     }
     process {
         if (
