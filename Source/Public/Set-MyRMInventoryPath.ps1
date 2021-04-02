@@ -7,7 +7,8 @@ function Set-MyRMInventoryPath {
         Sets the specific environment variable to overwrite default path to the MyRemoteManager inventory file.
     .PARAMETER Name
         Path to the inventory file.
-        This path is set in the specific environment variable.
+        This path is set in a environment variable.
+        Pass an empty string or null to reset to the default path.
     .INPUTS
         None. You cannot pipe objects to Set-MyRMInventoryPath.
     .OUTPUTS
