@@ -33,7 +33,6 @@ function Set-MyRMInventoryPath {
         [string] $Path,
 
         [Parameter(
-            Mandatory = $false,
             HelpMessage = "Target scope of the environment variable."
         )]
         [ValidateSet("Process", "User")]

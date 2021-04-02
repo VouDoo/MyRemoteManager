@@ -24,7 +24,6 @@ function Get-MyRMClient {
     [CmdletBinding()]
     param (
         [Parameter(
-            Mandatory = $false,
             HelpMessage = "Filter by client name."
         )]
         [ValidateNotNullOrEmpty()]

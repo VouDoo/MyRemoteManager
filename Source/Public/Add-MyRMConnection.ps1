@@ -51,7 +51,6 @@ function Add-MyRMConnection {
         [string] $Hostname,
 
         [Parameter(
-            Mandatory = $false,
             HelpMessage = "Port to connect to on the remote host."
         )]
         [UInt16] $Port,

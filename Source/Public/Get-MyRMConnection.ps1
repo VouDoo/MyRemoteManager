@@ -24,14 +24,12 @@ function Get-MyRMConnection {
     [CmdletBinding()]
     param (
         [Parameter(
-            Mandatory = $false,
             HelpMessage = "Filter by connection name."
         )]
         [ValidateNotNullOrEmpty()]
         [string] $Name = "*",
 
         [Parameter(
-            Mandatory = $false,
             HelpMessage = "Filter by client name."
         )]
         [ValidateNotNullOrEmpty()]
