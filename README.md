@@ -12,9 +12,9 @@ It is a very (very) simplied version of mRemoteNG, MobaXterm, and other similar 
 
 To install the PowerShell module, follow one of the following methods.
 
-### Get released module versions
+### Get released versions
 
-Not released yet. Stay tuned!
+Download files from [Releases](https://github.com/VouDoo/MyRemoteManager/releases) and extract in `C:\Users\<your_user>\Documents\PowerShell\Modules\`.
 
 ### Build from Source
 
