@@ -43,11 +43,10 @@ function Get-MyRMClient {
                 Description = $c.Description
             }
         }
-        $Clients = $Clients | Where-Object {
-            $_.Name -like $Name
-        } | Sort-Object -Property Name
     }
     end {
         $Clients
+        | Where-Object -Property Name -Like $Name
+        | Sort-Object -Property Name
     }
 }

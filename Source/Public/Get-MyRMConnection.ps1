@@ -55,11 +55,11 @@ function Get-MyRMConnection {
                 Description = $c.Description
             }
         }
-        $Connections = $Connections | Where-Object {
-            $_.Name -like $Name -and $_.Client -Like $Client
-        } | Sort-Object -Property Name
     }
     end {
         $Connections
+        | Where-Object -Property Name -Like $Name
+        | Where-Object -Property Client -Like $Client
+        | Sort-Object -Property Name
     }
 }

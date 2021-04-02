@@ -34,7 +34,7 @@ function Invoke-MyRMConnection {
         $Inventory.ReadFile()
     }
     process {
-        $Connection = $Inventory.Connections | Where-Object { $_.Name -eq $Name }
+        $Connection = $Inventory.Connections | Where-Object -Property Name -EQ $Name
         if ($PSCmdlet.ShouldProcess($Connection.ToString(), "Initiate connection")) {
             $Connection.Invoke()
         }

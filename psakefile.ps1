@@ -11,26 +11,33 @@ Task Init {
 Task Test -depends Init, Analyze, Pester -description "Run test suite"
 
 Task Analyze -depends Build {
-    $Results = Invoke-ScriptAnalyzer -Path $Settings.Out -Recurse `
-        -Settings $Settings.TestsScriptAnalyzerSettings -Verbose:$false
-    $Errors = $Results | Where-Object { $_.Severity -eq 'Error' }
+    $ScriptAnalyzerParams = @{
+        Path     = $Settings.Out
+        Settings = $Settings.TestsScriptAnalyzerSettings
+        Recurse  = $true
+        Verbose  = $false
+    }
+    $Results = Invoke-ScriptAnalyzer @ScriptAnalyzerParams
+
+    $Errors = $Results | Where-Object -Property Severity -EQ "Error"
     if (@($Errors).Count -gt 0) {
-        Write-Error -Message 'One or more Script Analyzer errors were found. Build cannot continue!'
+        Write-Error -Message "[analyse] One or more errors were found"
         $Errors | Format-Table -AutoSize
     }
-    $Warnings = $Results | Where-Object { $_.Severity -eq 'Warning' }
+
+    $Warnings = $Results | Where-Object -Property Severity -EQ "Warning"
     if (@($Warnings).Count -gt 0) {
-        Write-Warning -Message 'One or more Script Analyzer warnings were found. These should be corrected.'
+        Write-Warning -Message "[analyse] One or more warnings were found"
         $Warnings | Format-Table -AutoSize
     }
-} -description 'Run PSScriptAnalyzer'
+} -description "Run PSScriptAnalyzer"
 
 Task Pester -depends Build {
     $env:PESTER_FILE_TO_TEST = $Settings.OutModule
     $Results = Invoke-Pester -Path $Settings.TestsFiles -Output Detailed
     if ($Results.FailedCount -gt 0) {
         $Results | Format-List
-        Write-Error -Message 'One or more Pester tests failed. Build cannot continue!'
+        Write-Error -Message "[pester] One or more Pester tests failed (build stopped)"
     }
 } -description "Run Pester tests"
 
@@ -70,13 +77,17 @@ Task Build -depends Init, Clean {
     }
     Add-Content @ModuleFile -Value "#endregion Public functions`n"
     "[build][module] Done"
+
     # Manifest file
     "[build][manifest] Start build manifest file"
     "[build][manifest] Copy manifest"
     Copy-Item -Path $Settings.SourceManifest -Destination $Settings.OutManifest
     "[build][manifest] Update manifest"
-    Update-ModuleManifest -Path $Settings.OutManifest `
-        -CmdletsToExport $Settings.SourcePublicFunctions.BaseName `
-        -ModuleVersion $Settings.ModuleVersion
+    $ModuleManifestParams = @{
+        Path            = $Settings.OutManifest
+        CmdletsToExport = $Settings.SourcePublicFunctions.BaseName
+        ModuleVersion   = $Settings.ModuleVersion
+    }
+    Update-ModuleManifest @ModuleManifestParams
     "[build][manifest] Done"
 }

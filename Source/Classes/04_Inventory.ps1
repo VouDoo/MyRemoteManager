@@ -33,7 +33,7 @@ class Inventory {
             )
         }
         foreach ($c in $Items.Connections) {
-            $Client = $this.Clients | Where-Object { $_.Name -eq $c.Client }
+            $Client = $this.Clients | Where-Object -Property Name -EQ $c.Client
             $this.Connections += New-Object -TypeName Connection -ArgumentList @(
                 $c.Name,
                 $c.Hostname,
@@ -63,19 +63,19 @@ class Inventory {
     }
 
     [bool] ClientExists([string] $Name) {
-        return $(if (($this.Clients | Where-Object { $_.Name -eq $Name }).Count -gt 0) { $true } else { $false })
+        return $(if (($this.Clients | Where-Object -Property Name -EQ $Name).Count -gt 0) { $true } else { $false })
     }
 
     [bool] ConnectionExists([string] $Name) {
-        return $(if (($this.Connections | Where-Object { $_.Name -eq $Name }).Count -gt 0) { $true } else { $false })
+        return $(if (($this.Connections | Where-Object -Property Name -EQ $Name ).Count -gt 0) { $true } else { $false })
     }
 
     [Client] GetClient([string] $Name) {
-        return $this.Clients | Where-Object { $_.Name -eq $Name }
+        return $this.Clients | Where-Object -Property Name -EQ $Name
     }
 
     [Connection] GetConnection([string] $Name) {
-        return $this.Connections | Where-Object { $_.Name -eq $Name }
+        return $this.Connections | Where-Object -Property Name -EQ $Name
     }
 
     [void] AddClient([Client] $Client) {
@@ -97,10 +97,10 @@ class Inventory {
     }
 
     [void] RemoveClient([string] $Name) {
-        $this.Clients = $this.Clients | Where-Object { $_.Name -ne $Name }
+        $this.Clients = $this.Clients | Where-Object -Property Name -NE $Name
     }
 
     [void] RemoveConnection([string] $Name) {
-        $this.Connections = $this.Connections | Where-Object { $_.Name -ne $Name }
+        $this.Connections = $this.Connections | Where-Object -Property Name -NE $Name
     }
 }
