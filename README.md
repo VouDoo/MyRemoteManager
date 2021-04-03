@@ -69,13 +69,13 @@ New-Alias -Name coAdd -Value Add-MyRMConnection.ps1
 New-Alias -Name coRm -Value Remove-MyRMConnection.ps1
 ```
 
-_feel free to use your own aliases!_
+_Feel free to use your own aliases!_
 
 ### Create an inventory file
 
 First, you need to create an inventory file, where your connections will be stored.
 
-To do so, run:
+Use `New-MyRMInventory` to create the inventory file. Simply run:
 
 ```powershell
 New-MyRMInventory
@@ -86,16 +86,16 @@ By default, the inventory file is created in your user's home directory as `MyRe
 To use a custom path, run:
 
 ```powershell
-Set-MyRMInventoryPath "C:\path\to\your\MyInventory.json"
+Set-MyRMInventoryPath "C:\path\to\your\Inventory.json"
 ```
 
-_Note that the inventory uses the JSON format._
+_The inventory uses the JSON format._
 
 ### Create a client
 
 Clients are defined programs that are executed when you invoke a connection.
 
-To add your first client, run:
+To add a client, use `Add-MyRMClient`. For instance:
 
 ```powershell
 Add-MyRMClient -Name MySSH -Executable "ssh.exe" -Arguments "-l <user> -p <port> <host>" -DefaultPort 22 -Description "My first SSH client"
@@ -103,7 +103,7 @@ Add-MyRMClient -Name MySSH -Executable "ssh.exe" -Arguments "-l <user> -p <port>
 
 The `-Arguments` parameter takes a tokenized string which represents the arguments passed to the executable.
 
-Here is the list of tokens to include in the this string:
+_Some tokens must be present in this string._
 
 | Token    | Required | Description |
 |:--------:|:--------:| :---------- |
@@ -113,7 +113,7 @@ Here is the list of tokens to include in the this string:
 
 ### Create a connection
 
-To add your first connection, run:
+To add a connection, use `Add-MyRMConnection`. For instance:
 
 ```powershell
 Add-MyRMConnection -Name Perseverance -Hostname perseverance.mars.solarsys -Client MySSH -Description "My connection to the Perseverance Rover"
@@ -123,7 +123,7 @@ Add-MyRMConnection -Name Perseverance -Hostname perseverance.mars.solarsys -Clie
 
 ### Invoke your connection
 
-To connect to your remote host, run:
+To connect to a remote host, use `Invoke-MyRMConnection`. For instance:
 
 ```powershell
 Invoke-MyRMConnection Perseverance
@@ -133,4 +133,4 @@ Invoke-MyRMConnection Perseverance
 
 ### Get help
 
-Use [the `Get-Help` Cmdlet](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/get-help?view=powershell-7.1) and specify the command on which you want to obtain more information.
+Use [the `Get-Help` Cmdlet](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/get-help?view=powershell-7.1) to obtain more information about a command.
