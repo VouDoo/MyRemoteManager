@@ -170,10 +170,10 @@ Here are some ideas that future releases might cover:
 
 - Make client arguments more flexible.
   - Remove required tokens when it is possible.
-  - Add extra tokens with custom feature.
+  - Add extra tokens with custom features.
 - Implement specific error exceptions.
 - Optimize code.
-- Provide a better documentation.
+- Provide better documentation.
 - Keep it simple, stupid.
 - And more...
 
