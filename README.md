@@ -6,6 +6,10 @@ MyRemoteManager is a PowerShell module which contains a collection of functions 
 
 It is a very (very) simplied version of mRemoteNG, MobaXterm, and other similar tools.
 
+Please note that the module is only available for PowerShell Core (6 or later).
+
+Get the latest version of PS Core from [the official PowerShell repository](https://github.com/PowerShell/PowerShell/releases).
+
 ---
 
 ## Installation
