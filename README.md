@@ -1,24 +1,29 @@
 # MyRemoteManager
 
-## Description
-
-MyRemoteManager is a PowerShell module which contains a collection of functions for managing remote connections.
+MyRemoteManager is a PowerShell module that contains a collection of functions for managing remote connections.
 
 It is a very (very) simplied version of mRemoteNG, MobaXterm, and other similar tools.
 
-Please note that the module is only available for PowerShell Core (6 or later).
+## License
 
-Get the latest version of PS Core from [the official PowerShell repository](https://github.com/PowerShell/PowerShell/releases).
+MyRemoteManager is released under the terms of the MIT license. See [LICENSE](LICENSE) for more information or see <https://opensource.org/licenses/MIT>.
 
 ---
 
 ## Installation
 
-To install the PowerShell module, follow one of the following methods.
+To install the PowerShell module, follow one of the methods below:
+
+- [Get released versions](#get-released-versions)
+- [Build from Source](#build-from-source)
+
+Please note that the module is only available for PowerShell Core (6 or later).
+
+Get the latest version of PS Core from [the official PowerShell repository](https://github.com/PowerShell/PowerShell/releases).
 
 ### Get released versions
 
-Download files from [Releases](https://github.com/VouDoo/MyRemoteManager/releases) and extract in `C:\Users\<your_user>\Documents\PowerShell\Modules\`.
+Download `MyRemoteManager.zip` from [the "Releases" page](https://github.com/VouDoo/MyRemoteManager/releases) and extract it in `C:\Users\<your_user>\Documents\PowerShell\Modules\`.
 
 ### Build from Source
 
@@ -44,6 +49,12 @@ Download files from [Releases](https://github.com/VouDoo/MyRemoteManager/release
 
 ## Usage
 
+- [Prepare your environment](#prepare-your-environment)
+- [Create an inventory file](#create-an-inventory-file)
+- [Add a client](#add-a-client)
+- [Add a connection](#add-a-connection)
+- [Invoke a connection](#invoke-a-connection)
+
 ### Prepare your environment
 
 1. Import the module
@@ -62,7 +73,7 @@ The fastest way to use the module is to import it from your [PowerShell profile]
 
 We also recommend that you create aliases for the most commonly used commands.
 
-Here is an example of code you can append in your profile file:
+Here is an example of code that you can add to your profile file:
 
 ```powershell
 # Add in Microsoft.PowerShell_profile.ps1
@@ -79,7 +90,8 @@ _Feel free to use your own aliases!_
 
 First, you need to create an inventory file, where your connections will be stored.
 
-Use `New-MyRMInventory` to create the inventory file. Simply run:
+Use `New-MyRMInventory` to create the inventory file.
+Simply run:
 
 ```powershell
 New-MyRMInventory
@@ -95,11 +107,12 @@ Set-MyRMInventoryPath "C:\path\to\your\Inventory.json"
 
 _The inventory uses the JSON format._
 
-### Create a client
+### add a client
 
-Clients are defined programs that are executed when you invoke a connection.
+Clients are defined programs that are interpreted and executed when you invoke a connection.
 
-To add a client, use `Add-MyRMClient`. For instance:
+To add a client, use `Add-MyRMClient`.
+For instance:
 
 ```powershell
 Add-MyRMClient -Name MySSH -Executable "ssh.exe" -Arguments "-l <user> -p <port> <host>" -DefaultPort 22 -Description "My first SSH client"
@@ -117,9 +130,10 @@ _Some tokens must be present in this string._
 | `<port>` | Yes      | Port to connect to on the remote host. |
 | `<user>` | No       | Name of the user to log in with.</br>If set, Invoke-MyRMConnection will ask for a username at each execution. |
 
-### Create a connection
+### add a connection
 
-To add a connection, use `Add-MyRMConnection`. For instance:
+To add a connection, use `Add-MyRMConnection`.
+For instance:
 
 ```powershell
 Add-MyRMConnection -Name Perseverance -Hostname perseverance.mars.solarsys -Client MySSH -Description "My connection to the Perseverance Rover"
@@ -127,9 +141,10 @@ Add-MyRMConnection -Name Perseverance -Hostname perseverance.mars.solarsys -Clie
 
 **Tip**: _Use the `TAB` key to autocomplete the name of the client._
 
-### Invoke your connection
+### Invoke a connection
 
-To connect to a remote host, use `Invoke-MyRMConnection`. For instance:
+To invoke a connection, use `Invoke-MyRMConnection`.
+For instance:
 
 ```powershell
 Invoke-MyRMConnection Perseverance
@@ -140,3 +155,24 @@ Invoke-MyRMConnection Perseverance
 ### Get help
 
 Use [the `Get-Help` Cmdlet](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/get-help?view=powershell-7.1) to obtain more information about a command.
+
+---
+
+## What's next?
+
+Here are some ideas that future releases might cover:
+
+- Make client arguments more flexible.
+  - Remove required tokens when it is possible.
+  - Add extra tokens with custom feature.
+- Implement specific error exceptions.
+- Optimize code.
+- Provide a better documentation.
+- Keep it simple, stupid.
+- And more...
+
+## Support
+
+If you have any bug reports, log them on [the issue tracker](https://github.com/VouDoo/MyRemoteManager/issues).
+
+If you have some suggestions, please don't hesitate to contact me (find email on [my GitHub profile](https://github.com/VouDoo)).
