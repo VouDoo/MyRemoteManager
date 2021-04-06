@@ -64,9 +64,9 @@ Here is an example of code you can append in your profile file:
 # Add in Microsoft.PowerShell_profile.ps1
 Import-Module -Name MyRemoteManager
 New-Alias -Name co -Value Invoke-MyRMConnection
-New-Alias -Name coGet -Value Get-MyRMConnection.ps1
-New-Alias -Name coAdd -Value Add-MyRMConnection.ps1
-New-Alias -Name coRm -Value Remove-MyRMConnection.ps1
+New-Alias -Name coGet -Value Get-MyRMConnection
+New-Alias -Name coAdd -Value Add-MyRMConnection
+New-Alias -Name coRm -Value Remove-MyRMConnection
 ```
 
 _Feel free to use your own aliases!_
