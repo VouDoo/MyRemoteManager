@@ -12,14 +12,25 @@ MyRemoteManager is released under the terms of the MIT license. See [LICENSE](LI
 
 ## Installation
 
-To install the PowerShell module, follow one of the methods below:
+To install the PowerShell module, follow one of these methods:
 
+- [Install from PS Gallery](#install-from-ps-gallery)
 - [Get released versions](#get-released-versions)
 - [Build from Source](#build-from-source)
 
 Please note that the module is only available for PowerShell Core (6 or later).
 
 Get the latest version of PS Core from [the official PowerShell repository](https://github.com/PowerShell/PowerShell/releases).
+
+### Install from PS Gallery
+
+The module is published on PowerShell Gallery. See <https://www.powershellgallery.com/packages/MyRemoteManager>.
+
+To install it, run:
+
+```powershell
+Install-Module -Name MyRemoteManager -Repository PSGallery
+```
 
 ### Get released versions
 
