@@ -105,6 +105,8 @@ To add a client, use `Add-MyRMClient`. For instance:
 Add-MyRMClient -Name MySSH -Executable "ssh.exe" -Arguments "-l <user> -p <port> <host>" -DefaultPort 22 -Description "My first SSH client"
 ```
 
+Find out more examples [here](examples/clients.md).
+
 The `-Arguments` parameter takes a tokenized string which represents the arguments passed to the executable.
 
 _Some tokens must be present in this string._
