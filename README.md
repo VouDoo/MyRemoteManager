@@ -27,19 +27,25 @@ Download `MyRemoteManager.zip` from [the "Releases" page](https://github.com/Vou
 
 ### Build from Source
 
-1. Build the module
+1. Unblock downloaded scripts _(optional)_
+
+    ```powershell
+    Get-ChildItem -Filter *.ps1 | Unblock-File
+    ```
+
+2. Build the module
 
     ```powershell
     .\build.ps1 build -Bootstrap
     ```
 
-2. Remove any old versions of the module
+3. Remove any old versions of the module
 
     ```powershell
     Remove-Item "$HOME\Documents\PowerShell\Modules\MyRemoteManager" -Force
     ```
 
-3. Install the freshly built module
+4. Install the freshly built module
 
     ```powershell
     Copy-Item ".\Out\MyRemoteManager" "$HOME\Documents\PowerShell\Modules\" -Recurse
