@@ -10,10 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `Hostname` parameter in `Get-MyRMConnection` to filter connections by hostname
+- `Get-MyRMInventoryInfo` shows whether the inventory file exists or not
 
 ### Changed
 
 - The maximum length of the Client/Connection Name has been increased from 30 to 50
+
+### Fixed
+
+- `Get-MyRMInventoryInfo` does not fail anymore if the inventory file does not exist
 
 ## [0.1.0]
 
