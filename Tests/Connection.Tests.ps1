@@ -81,11 +81,20 @@ Describe "Get-MyRMConnection" {
     It "Gets Connections filtered by client name" {
         (Get-MyRMConnection -Client "ClientTest")[0].Name | Should -BeExactly "TestConnection3"
     }
-    It "Gets Connections filtered by name and client name that don't exist" {
+    It "Gets Connections filtered by hostname" {
+        (Get-MyRMConnection -Hostname "conn2*")[0].Name | Should -BeExactly "TestConnection2"
+    }
+    It "Gets Connections filtered by name and client name" {
         (Get-MyRMConnection -Name "*tion2" -Client "TestClient")[0].Name | Should -BeExactly "TestConnection2"
+    }
+    It "Gets Connections filtered by name and hostname name" {
+        (Get-MyRMConnection -Name "*tion3" -Hostname "*.test")[0].Name | Should -BeExactly "TestConnection3"
     }
     It "Gets Connections filtered by name and client name that do not exist" {
         (Get-MyRMConnection -Name "*Test3" -Client "TestClient") | Should -BeNullOrEmpty
+    }
+    It "Gets Connections filtered by name and hostname name that do not exist" {
+        (Get-MyRMConnection -Name "*Test2" -Hostname "do.not.exist") | Should -BeNullOrEmpty
     }
 }
 Describe "Remove-MyRMConnection" {
