@@ -16,7 +16,7 @@ function Get-MyRMConnection {
         PS> Get-MyRMConnection
         (shows objects)
     .EXAMPLE
-        PS> Get-MyRMConnection -Name "myproject_*" -Client "*_myproject"
+        PS> Get-MyRMConnection -Name "myproject_*" -Hostname "*.mydomain" -Client "*_myproject"
         (shows filtered objects)
     #>
 
@@ -28,6 +28,12 @@ function Get-MyRMConnection {
         )]
         [ValidateNotNullOrEmpty()]
         [string] $Name = "*",
+
+        [Parameter(
+            HelpMessage = "Filter by hostname."
+        )]
+        [ValidateNotNullOrEmpty()]
+        [string] $Hostname = "*",
 
         [Parameter(
             HelpMessage = "Filter by client name."
@@ -59,6 +65,7 @@ function Get-MyRMConnection {
     end {
         $Connections
         | Where-Object -Property Name -Like $Name
+        | Where-Object -Property Hostname -Like $Hostname
         | Where-Object -Property Client -Like $Client
         | Sort-Object -Property Name
     }
