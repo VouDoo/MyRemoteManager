@@ -62,6 +62,16 @@ class Inventory {
         Set-Content -Path $this.Path -Value $Json -Encoding ([Inventory]::Encoding) -Force
     }
 
+    hidden [bool] ClientNameDuplicatesExist() {
+        # TODO Develop ClientNameDuplicatesExist method
+        return $false
+    }
+
+    hidden [bool] ConnectionNameDuplicatesExist() {
+        # TODO Develop ConnectionNameDuplicatesExist method
+        return $false
+    }
+
     [bool] ClientExists([string] $Name) {
         return $(if (($this.Clients | Where-Object -Property Name -EQ $Name).Count -gt 0) { $true } else { $false })
     }
