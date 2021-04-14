@@ -1,6 +1,6 @@
 class Item {
     # Name
-    [ValidateLength(1, 30)]
+    [ValidateLength(1, 50)]
     [ValidatePattern("^([a-zA-Z0-9_\-]+)$")]
     [string] $Name
     # Description
