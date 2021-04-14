@@ -33,7 +33,17 @@ Describe "Get-MyRMInventoryInfo" {
         $Info = Get-MyRMInventoryInfo
         $Info.Path | Should -BeExactly $env:MY_RM_INVENTORY
         $Info.EnvVariable | Should -BeExactly "MY_RM_INVENTORY"
+        $Info.FileExists | Should -BeTrue
         $Info.NumberOfClients | Should -BeExactly 3
+        $Info.NumberOfConnections | Should -BeExactly 0
+    }
+    It "Collects information about the inventory with a different path" {
+        $env:MY_RM_INVENTORY = Join-Path -Path $TestDrive -ChildPath "OtherInventory.json"
+        $Info = Get-MyRMInventoryInfo
+        $Info.Path | Should -BeExactly $env:MY_RM_INVENTORY
+        $Info.EnvVariable | Should -BeExactly "MY_RM_INVENTORY"
+        $Info.FileExists | Should -BeFalse
+        $Info.NumberOfClients | Should -BeExactly 0
         $Info.NumberOfConnections | Should -BeExactly 0
     }
 }
