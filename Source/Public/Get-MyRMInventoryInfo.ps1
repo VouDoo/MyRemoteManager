@@ -19,12 +19,17 @@ function Get-MyRMInventoryInfo {
     param ()
     begin {
         $Inventory = New-Object -TypeName Inventory
-        $Inventory.ReadFile()
+        $FileExists = $false
     }
     process {
+        if (Test-Path -Path $Inventory.Path -PathType Leaf) {
+            $Inventory.ReadFile()
+            $FileExists = $true
+        }
         $InventoryInfo = [PSCustomObject] @{
             Path                = $Inventory.Path
             EnvVariable         = [Inventory]::EnvVariable
+            FileExists          = $FileExists
             NumberOfClients     = $Inventory.Clients.Count
             NumberOfConnections = $Inventory.Connections.Count
         }
