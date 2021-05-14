@@ -32,6 +32,9 @@ class Inventory {
                 $c.Description
             )
         }
+        if ($this.ClientNameDuplicateExists()) {
+            Write-Warning -Message ("Fix it by renaming the duplicated client names in the inventory file: {0}" -f [Inventory]::GetPath())
+        }
         foreach ($c in $Items.Connections) {
             $Client = $this.Clients | Where-Object -Property Name -EQ $c.Client
             $this.Connections += New-Object -TypeName Connection -ArgumentList @(
@@ -41,6 +44,9 @@ class Inventory {
                 $Client,
                 $c.Description
             )
+        }
+        if ($this.ConnectionNameDuplicateExists()) {
+            Write-Warning -Message ("Fix it by renaming the duplicated connection names in the inventory file: {0}" -f [Inventory]::GetPath())
         }
     }
 
@@ -62,13 +68,29 @@ class Inventory {
         Set-Content -Path $this.Path -Value $Json -Encoding ([Inventory]::Encoding) -Force
     }
 
-    hidden [bool] ClientNameDuplicatesExist() {
-        # TODO Develop ClientNameDuplicatesExist method
+    hidden [bool] ClientNameDuplicateExists() {
+        $Duplicates = $this.Clients
+        | Group-Object -Property Name
+        | Where-Object -Property Count -GT 1
+        if ($Duplicates) {
+            $Duplicates | ForEach-Object {
+                Write-Warning -Message ("It exists more than one client named `"{0}`"." -f $_.Name)
+            }
+            return $true
+        }
         return $false
     }
 
-    hidden [bool] ConnectionNameDuplicatesExist() {
-        # TODO Develop ConnectionNameDuplicatesExist method
+    hidden [bool] ConnectionNameDuplicateExists() {
+        $Duplicates = $this.Connections
+        | Group-Object -Property Name
+        | Where-Object -Property Count -GT 1
+        if ($Duplicates) {
+            $Duplicates | ForEach-Object {
+                Write-Warning -Message ("It exists more than one connection named `"{0}`"." -f $_.Name)
+            }
+            return $true
+        }
         return $false
     }
 

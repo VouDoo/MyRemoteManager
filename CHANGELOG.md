@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `Hostname` parameter in `Get-MyRMConnection` to filter connections by hostname
 - `Get-MyRMInventoryInfo` shows whether the inventory file exists or not
+- Check and warn if duplicates exist at inventory file access
 
 ### Changed
 
