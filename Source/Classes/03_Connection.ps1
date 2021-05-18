@@ -21,11 +21,18 @@ class Connection : Item {
         $this.Description = $Description
     }
 
+    [UInt16] GetPort() {
+        if ($this.Port -eq 0) {
+            return $this.Client.DefaultPort
+        }
+        return $this.Port
+    }
+
     [string] GenerateArgs() {
         return $this.Client.TokenizedArgs.Replace(
             "<host>", $this.Hostname
         ).Replace(
-            "<port>", $(if ($this.Port -eq 0) { $this.Client.DefaultPort } else { $this.Port })
+            "<port>", $this.GetPort()
         )
     }
 
@@ -53,6 +60,6 @@ class Connection : Item {
             $this.Description, `
             $this.Client.Name, `
             $this.Hostname, `
-            $this.Port.ToString().Replace("0", "default")
+            $this.GetPort()
     }
 }
