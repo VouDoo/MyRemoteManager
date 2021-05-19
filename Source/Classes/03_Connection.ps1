@@ -42,18 +42,6 @@ class Connection : Item {
         )
     }
 
-    [void] Invoke() {
-        $FilePath = $this.Client.Executable
-        if ([Client]::UserTokenExists($this.Client.TokenizedArgs)) {
-            $User = Read-Host -Prompt ("Username" -f $this.Hostname)
-            $Arguments = $this.GenerateArgs($User)
-        }
-        else {
-            $Arguments = $this.GenerateArgs()
-        }
-        Start-Process -FilePath $FilePath -ArgumentList $Arguments
-    }
-
     [string] ToString() {
         return "{0} ({1}): {2} to {3}:{4}" -f `
             $this.Name, `

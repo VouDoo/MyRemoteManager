@@ -7,6 +7,8 @@ function Invoke-MyRMConnection {
         Invokes MyRemoteManager connection which is defined in the inventory.
     .PARAMETER Name
         Name of the connection.
+    .PARAMETER RunInCurrentScope
+        Starts the connection in the current PowerShell scope.
     .INPUTS
         None. You cannot pipe objects to Invoke-MyRMConnection.
     .OUTPUTS
@@ -27,7 +29,13 @@ function Invoke-MyRMConnection {
         )]
         [ValidateNotNullOrEmpty()]
         [ValidateSet( [ValidateConnectionName] )]
-        [string] $Name
+        [string] $Name,
+
+        [Parameter(
+            HelpMessage = "Start the connection in the current PowerShell scope."
+        )]
+        [Alias("X")]
+        [switch] $RunInCurrentScope
     )
     begin {
         $Inventory = New-Object -TypeName Inventory
@@ -36,7 +44,24 @@ function Invoke-MyRMConnection {
     process {
         $Connection = $Inventory.Connections | Where-Object -Property Name -EQ $Name
         if ($PSCmdlet.ShouldProcess($Connection.ToString(), "Initiate connection")) {
-            $Connection.Invoke()
+            if ([Client]::UserTokenExists($Connection.Client.TokenizedArgs)) {
+                $User = Read-Host -Prompt ("Username" -f $Connection.Hostname)
+                $Arguments = $Connection.GenerateArgs($User)
+            }
+            else {
+                $Arguments = $Connection.GenerateArgs()
+            }
+            $Process = @{
+                FilePath     = $Connection.Client.Executable
+                ArgumentList = $Arguments
+            }
+            if ($RunInCurrentScope.IsPresent) {
+                $Command = "{0} {1}" -f $Process.FilePath, $Process.ArgumentList
+                Invoke-Expression -Command $Command
+            }
+            else {
+                Start-Process @Process
+            }
         }
     }
     end {}
