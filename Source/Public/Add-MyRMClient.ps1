@@ -1,37 +1,42 @@
 function Add-MyRMClient {
 
     <#
+
     .SYNOPSIS
-        Adds MyRemoteManager client.
+    Adds MyRemoteManager client.
+
     .DESCRIPTION
-        Adds client entry to the MyRemoteManager inventory file.
+    Adds client entry to the MyRemoteManager inventory file.
+
     .PARAMETER Name
-        Name of the client.
+    Name of the client.
+
     .PARAMETER Executable
-        Path to the executable program that the client uses.
+    Path to the executable program that the client uses.
+
     .PARAMETER Arguments
-        String of Arguments to pass to the executable.
-        The string should contain the required tokens.
-        Please read the documentation of MyRemoteManager.
+    String of Arguments to pass to the executable.
+    The string should contain the required tokens.
+    Please read the documentation of MyRemoteManager.
+
     .PARAMETER DefaultPort
-        Network port to use if the connection has no defined port.
+    Network port to use if the connection has no defined port.
+
     .PARAMETER Description
-        Short description for the client.
-    .PARAMETER PassThru
-        Indicates that the cmdlet sends items from the interactive window down the pipeline as input to other commands.
+    Short description for the client.
+
     .INPUTS
-        None. You cannot pipe objects to Add-MyRMClient.
+    None. You cannot pipe objects to Add-MyRMClient.
+
     .OUTPUTS
-        System.Void. None.
-            or if PassThru is set,
-        System.String. Add-MyRMClient returns a string with the name of the added client.
+    System.Void. None.
+
     .EXAMPLE
-        PS> Add-MyRMClient -Name SSH -Executable "ssh.exe" -Arguments "-l <user> -p <port> <host>" -DefaultPort 22
+    PS> Add-MyRMClient -Name SSH -Executable "ssh.exe" -Arguments "-l <user> -p <port> <host>" -DefaultPort 22
+
     .EXAMPLE
-        PS> Add-MyRMClient -Name MyCustomClient -Executable "client.exe" -Arguments "--hostname <host> --port <port>" -DefaultPort 666 -Description "My custom client"
-    .EXAMPLE
-        PS> Add-MyRMClient -Name SSH -Executable "ssh.exe" -Arguments "-l <user> -p <port> <host>" -DefaultPort 22 -PassThru
-        SSH
+    PS> Add-MyRMClient -Name MyCustomClient -Executable "client.exe" -Arguments "--hostname <host> --port <port>" -DefaultPort 666 -Description "My custom client"
+
     #>
 
     [OutputType([string])]
@@ -70,10 +75,12 @@ function Add-MyRMClient {
         )]
         [string] $Description
     )
+
     begin {
         $Inventory = New-Object -TypeName Inventory
         $Inventory.ReadFile()
     }
+
     process {
         $Client = New-Object -TypeName Client -ArgumentList @(
             $Name,
@@ -93,5 +100,4 @@ function Add-MyRMClient {
             Write-Verbose -Message ("Client `"{0}`" has been added to the inventory." -f $Name)
         }
     }
-    end {}
 }

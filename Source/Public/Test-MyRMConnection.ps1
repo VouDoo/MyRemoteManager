@@ -1,20 +1,28 @@
 function Test-MyRMConnection {
 
     <#
+
     .SYNOPSIS
-        Tests MyRemoteManager connection.
+    Tests MyRemoteManager connection.
+
     .DESCRIPTION
-        Tests MyRemoteManager connection which is defined in the inventory.
+    Tests MyRemoteManager connection which is defined in the inventory.
+
     .PARAMETER Name
-        Name of the connection.
+    Name of the connection.
+
     .INPUTS
-        None. You cannot pipe objects to Test-MyRMConnection.
+    None. You cannot pipe objects to Test-MyRMConnection.
+
     .OUTPUTS
-        System.Void. None.
+    System.Void. None.
+
     .EXAMPLE
-        PS> Test-MyRMConnection myconn
+    PS> Test-MyRMConnection myconn
+
     .EXAMPLE
-        PS> Test-MyRMConnection -Name myconn
+    PS> Test-MyRMConnection -Name myconn
+
     #>
 
     [OutputType([void])]
@@ -29,10 +37,12 @@ function Test-MyRMConnection {
         [ValidateSet( [ValidateConnectionName] )]
         [string] $Name
     )
+
     begin {
         $Inventory = New-Object -TypeName Inventory
         $Inventory.ReadFile()
     }
+
     process {
         $Connection = $Inventory.Connections | Where-Object -Property Name -EQ $Name
         if (Test-Connection -TargetName $Connection.Hostname -TcpPort $Connection.GetPort() -TimeoutSeconds 3) {
@@ -46,5 +56,4 @@ function Test-MyRMConnection {
             )
         }
     }
-    end {}
 }

@@ -1,36 +1,41 @@
 function Add-MyRMConnection {
 
     <#
+
     .SYNOPSIS
-        Adds MyRemoteManager connection.
+    Adds MyRemoteManager connection.
+
     .DESCRIPTION
-        Adds connection entry to the MyRemoteManager inventory file.
+    Adds connection entry to the MyRemoteManager inventory file.
+
     .PARAMETER Name
-        Name of the connection.
+    Name of the connection.
+
     .PARAMETER Hostname
-        Name of the remote host.
+    Name of the remote host.
+
     .PARAMETER Port
-        Port to connect to on the remote host.
-        If not set, it will use the default port of the client.
+    Port to connect to on the remote host.
+    If not set, it will use the default port of the client.
+
     .PARAMETER Client
-        Name of the client.
+    Name of the client.
+
     .PARAMETER Description
-        Short description for the connection.
-    .PARAMETER PassThru
-        Indicates that the cmdlet sends items from the interactive window down the pipeline as input to other commands.
+    Short description for the connection.
+
     .INPUTS
-        None. You cannot pipe objects to Add-MyRMConnection.
+    None. You cannot pipe objects to Add-MyRMConnection.
+
     .OUTPUTS
-        System.Void. None.
-            or if PassThru is set,
-        System.String. Add-MyRMConnection returns a string with the name of the added connection.
+    System.Void. None.
+
     .EXAMPLE
-        PS> Add-MyRMConnection -Name myconn -Hostname myhost -Client SSH
+    PS> Add-MyRMConnection -Name myconn -Hostname myhost -Client SSH
+
     .EXAMPLE
-        PS> Add-MyRMConnection -Name myconn -Hostname myhost -Port 2222 -Client SSH -Description "My connection"
-    .EXAMPLE
-        PS> Add-MyRMConnection -Name myconn -Hostname myhost -Client SSH -PassThru
-        myconn
+    PS> Add-MyRMConnection -Name myconn -Hostname myhost -Port 2222 -Client SSH -Description "My connection"
+
     #>
 
     [OutputType([string])]
@@ -68,10 +73,12 @@ function Add-MyRMConnection {
         )]
         [string] $Description
     )
+
     begin {
         $Inventory = New-Object -TypeName Inventory
         $Inventory.ReadFile()
     }
+
     process {
         $Connection = New-Object -TypeName Connection -ArgumentList @(
             $Name,
@@ -90,5 +97,4 @@ function Add-MyRMConnection {
             Write-Verbose -Message ("Connection `"{0}`" has been added to the inventory." -f $Name)
         }
     }
-    end {}
 }

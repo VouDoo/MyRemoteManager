@@ -1,23 +1,31 @@
 function Get-MyRMClient {
 
     <#
+
     .SYNOPSIS
-        Gets MyRemoteManager clients.
+    Gets MyRemoteManager clients.
+
     .DESCRIPTION
-        Gets available clients from the MyRemoteManager inventory file.
-        Clients can be filtered by their name.
+    Gets available clients from the MyRemoteManager inventory file.
+    Clients can be filtered by their name.
+
     .PARAMETER Name
-        Filters clients by name.
+    Filters clients by name.
+
     .INPUTS
-        None. You cannot pipe objects to Get-MyRMClient.
+    None. You cannot pipe objects to Get-MyRMClient.
+
     .OUTPUTS
-        PSCustomObject. Get-MyRMClient returns objects with details of the available clients.
+    PSCustomObject. Get-MyRMClient returns objects with details of the available clients.
+
     .EXAMPLE
-        PS> Get-MyRMClient
-        (shows objects)
+    PS> Get-MyRMClient
+    (objects)
+
     .EXAMPLE
-        PS> Get-MyRMClient -Name "custom_*"
-        (shows filtered objects)
+    PS> Get-MyRMClient -Name "custom_*"
+    (filtered objects)
+
     #>
 
     [OutputType([PSCustomObject[]])]
@@ -29,10 +37,12 @@ function Get-MyRMClient {
         [ValidateNotNullOrEmpty()]
         [string] $Name = "*"
     )
+
     begin {
         $Inventory = New-Object -TypeName Inventory
         $Inventory.ReadFile()
     }
+
     process {
         $Clients = @()
         foreach ($c in $Inventory.Clients) {
@@ -44,6 +54,7 @@ function Get-MyRMClient {
             }
         }
     }
+
     end {
         $Clients
         | Where-Object -Property Name -Like $Name

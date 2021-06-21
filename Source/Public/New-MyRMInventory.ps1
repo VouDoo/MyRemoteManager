@@ -1,34 +1,47 @@
 function New-MyRMInventory {
 
     <#
+
     .SYNOPSIS
-        Creates MyRemoteManager inventory file.
+    Creates MyRemoteManager inventory file.
+
     .DESCRIPTION
-        Creates a new inventory file where MyRemoteManager saves items.
+    Creates a new inventory file where MyRemoteManager saves items.
+
     .PARAMETER NoDefaultClients
-        Does not add defaults clients to the new inventory.
+    Does not add defaults clients to the new inventory.
+
     .PARAMETER Force
-        Overwrites existing inventory file.
+    Overwrites existing inventory file.
+
     .PARAMETER PassThru
-        Indicates that the cmdlet sends items from the interactive window down the pipeline as input to other commands.
+    Indicates that the cmdlet sends items from the interactive window down the pipeline as input to other commands.
+
     .INPUTS
-        None. You cannot pipe objects to New-MyRMInventory.
+    None. You cannot pipe objects to New-MyRMInventory.
+
     .OUTPUTS
-        System.Void. None.
-            or if PassThru is set,
-        System.String. New-MyRMInventory returns a string with the path to the created inventory.
+    System.Void. None.
+        or if PassThru is set,
+    System.String. New-MyRMInventory returns a string with the path to the created inventory.
+
     .EXAMPLE
-        PS> New-MyRMInventory
+    PS> New-MyRMInventory
+
     .EXAMPLE
-        PS> New-MyRMInventory -NoDefaultClients
+    PS> New-MyRMInventory -NoDefaultClients
+
     .EXAMPLE
-        PS> New-MyRMInventory -Force
+    PS> New-MyRMInventory -Force
+
     .EXAMPLE
-        PS> New-MyRMInventory -PassThru
-        C:\Users\MyUsername\MyRemoteManager.json
+    PS> New-MyRMInventory -PassThru
+    C:\Users\MyUsername\MyRemoteManager.json
+
     .EXAMPLE
-        PS> New-MyRMInventory -NoDefaultClients -Force -PassThru
-        C:\Users\MyUsername\MyRemoteManager.json
+    PS> New-MyRMInventory -NoDefaultClients -Force -PassThru
+    C:\Users\MyUsername\MyRemoteManager.json
+
     #>
 
     [OutputType([void])]
@@ -49,9 +62,11 @@ function New-MyRMInventory {
         )]
         [switch] $PassThru
     )
+
     begin {
         $Inventory = New-Object -TypeName Inventory
     }
+
     process {
         if ((Test-Path -Path $Inventory.Path -PathType Leaf) -and -not ($Force.IsPresent)) {
             Write-Error -ErrorAction Stop -Exception (
@@ -95,6 +110,7 @@ function New-MyRMInventory {
             Write-Verbose -Message ("Inventory file has been created: {0}" -f $Inventory.Path)
         }
     }
+
     end {
         if ($PassThru.IsPresent) {
             Resolve-Path $Inventory.Path | Select-Object -ExpandProperty Path

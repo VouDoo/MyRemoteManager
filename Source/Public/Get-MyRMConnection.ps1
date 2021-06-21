@@ -1,23 +1,31 @@
 function Get-MyRMConnection {
 
     <#
+
     .SYNOPSIS
-        Gets MyRemoteManager connections.
+    Gets MyRemoteManager connections.
+
     .DESCRIPTION
-        Gets available connections from the MyRemoteManager inventory file.
-        connections can be filtered by their name and/or client name.
+    Gets available connections from the MyRemoteManager inventory file.
+    connections can be filtered by their name and/or client name.
+
     .PARAMETER Name
-        Filters connections by name.
+    Filters connections by name.
+
     .INPUTS
-        None. You cannot pipe objects to Get-MyRMConnection.
+    None. You cannot pipe objects to Get-MyRMConnection.
+
     .OUTPUTS
-        PSCustomObject. Get-MyRMConnection returns objects with details of the available connections.
+    PSCustomObject. Get-MyRMConnection returns objects with details of the available connections.
+
     .EXAMPLE
-        PS> Get-MyRMConnection
-        (shows objects)
+    PS> Get-MyRMConnection
+    (objects)
+
     .EXAMPLE
-        PS> Get-MyRMConnection -Name "myproject_*" -Hostname "*.mydomain" -Client "*_myproject"
-        (shows filtered objects)
+    PS> Get-MyRMConnection -Name "myproject_*" -Hostname "*.mydomain" -Client "*_myproject"
+    (filtered objects)
+
     #>
 
     [OutputType([PSCustomObject[]])]
@@ -41,10 +49,12 @@ function Get-MyRMConnection {
         [ValidateNotNullOrEmpty()]
         [string] $Client = "*"
     )
+
     begin {
         $Inventory = New-Object -TypeName Inventory
         $Inventory.ReadFile()
     }
+
     process {
         $Connections = @()
         foreach ($c in $Inventory.Connections) {
@@ -62,6 +72,7 @@ function Get-MyRMConnection {
             }
         }
     }
+
     end {
         $Connections
         | Where-Object -Property Name -Like $Name

@@ -1,24 +1,33 @@
 function Set-MyRMInventoryPath {
 
     <#
+
     .SYNOPSIS
-        Sets MyRemoteManager inventory path.
+    Sets MyRemoteManager inventory path.
+
     .DESCRIPTION
-        Sets the specific environment variable to overwrite default path to the MyRemoteManager inventory file.
+    Sets the specific environment variable to overwrite default path to the MyRemoteManager inventory file.
+
     .PARAMETER Name
-        Path to the inventory file.
-        This path is set in a environment variable.
-        Pass an empty string or null to reset to the default path.
+    Path to the inventory file.
+    This path is set in a environment variable.
+    Pass an empty string or null to reset to the default path.
+
     .PARAMETER Target
-        Target scope where the environment variable will be saved.
+    Target scope where the environment variable will be saved.
+
     .INPUTS
-        None. You cannot pipe objects to Set-MyRMInventoryPath.
+    None. You cannot pipe objects to Set-MyRMInventoryPath.
+
     .OUTPUTS
-        System.Void. None.
+    System.Void. None.
+
     .EXAMPLE
-        PS> Set-MyRMInventoryPath C:\MyCustomInventory.json
+    PS> Set-MyRMInventoryPath C:\MyCustomInventory.json
+
     .EXAMPLE
-        PS> Set-MyRMInventoryPath -Path C:\MyCustomInventory.json
+    PS> Set-MyRMInventoryPath -Path C:\MyCustomInventory.json
+
     #>
 
     [OutputType([void])]
@@ -38,9 +47,11 @@ function Set-MyRMInventoryPath {
         [ValidateSet("Process", "User")]
         [string] $Target = "User"
     )
+
     begin {
         $EnvVar = [Inventory]::EnvVariable
     }
+
     process {
         if (
             $PSCmdlet.ShouldProcess(
@@ -56,5 +67,4 @@ function Set-MyRMInventoryPath {
             Write-Verbose -Message ("{0} environment variable `"{1}`" has been set to `"{2}`"." -f $Target, $EnvVar, $Path)
         }
     }
-    end {}
 }

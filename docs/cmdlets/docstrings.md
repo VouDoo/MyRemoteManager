@@ -8,24 +8,37 @@ Example:
 function New-File {
 
     <#
+
     .SYNOPSIS
-        Creates file.
+    Creates file.
+
     .DESCRIPTION
-        Creates file to a user-defined path.
+    Creates file to a user-defined path.
+
     .PARAMETER Path
-        Defines file path.
+    Defines file path.
+
     .PARAMETER Force
-        Forces the file creation if it already exists.
+    Forces the file creation if it already exists.
+
     .INPUTS
-        None. You cannot pipe objects to New-File.
+    None. You cannot pipe objects to New-File.
+
     .OUTPUTS
-        System.String. New-File returns a string with the file path.
+    System.String. New-File returns a string with the file path.
+
     .EXAMPLE
-        PS> New-File -Path "C:\test.txt"
-        C:\test.txt
+    PS> New-File -Path "C:\test.txt"
+    C:\test.txt
+
+    Creates a file
+
     .EXAMPLE
-        PS> New-File -Path "C:\test.txt" -Force
-        C:\test.txt
+    PS> New-File -Path "C:\test.txt" -Force
+    C:\test.txt
+
+    Creates a file (force)
+
     #>
 
     [CmdletBinding()]
@@ -35,12 +48,15 @@ function New-File {
 
         [switch] $Force
     )
+
     begin(
         # ...
     )
+
     process(
         # ...
     )
+
     end(
         $Path
     )
