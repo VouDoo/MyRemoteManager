@@ -6,7 +6,8 @@ It is a very (very) simplified version of mRemoteNG, MobaXterm, and other simila
 
 ## License
 
-MyRemoteManager is released under the terms of the MIT license. See [LICENSE](LICENSE) for more information or see <https://opensource.org/licenses/MIT>.
+MyRemoteManager is released under the terms of the MIT license.
+See [LICENSE](LICENSE) for more information or see <https://opensource.org/licenses/MIT>.
 
 ---
 
@@ -18,13 +19,14 @@ To install the PowerShell module, follow one of these methods:
 - [Get released versions](#get-released-versions)
 - [Build from Source](#build-from-source)
 
-Please note that the module is only available for PowerShell Core (6 or later).
+Please note that the module is only available for PowerShell Core (7 or later).
 
 Get the latest version of PS Core from [the official PowerShell repository](https://github.com/PowerShell/PowerShell/releases).
 
 ### Install from PS Gallery
 
-The module is published on PowerShell Gallery. See <https://www.powershellgallery.com/packages/MyRemoteManager>.
+The module is published on PowerShell Gallery.
+See <https://www.powershellgallery.com/packages/MyRemoteManager>.
 
 To install it, run:
 
@@ -34,7 +36,8 @@ Install-Module -Name MyRemoteManager -Repository PSGallery
 
 ### Get released versions
 
-Download `MyRemoteManager.zip` from [the "Releases" page](https://github.com/VouDoo/MyRemoteManager/releases) and extract it in `C:\Users\<your_user>\Documents\PowerShell\Modules\`.
+Download `MyRemoteManager.zip` from [the "Releases" page](https://github.com/VouDoo/MyRemoteManager/releases).
+Extract it in `C:\Users\<your_user>\Documents\PowerShell\Modules\`.
 
 ### Build from Source
 
@@ -86,7 +89,8 @@ Download `MyRemoteManager.zip` from [the "Releases" page](https://github.com/Vou
     Get-Command -Module MyRemoteManager
     ```
 
-The fastest way to use the module is to import it from your [PowerShell profile](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.1). Then, each time you will open your PowerShell console, the module will be automatically imported.
+The fastest way to use the module is to import it from your [PowerShell profile](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.1).
+Then, each time you will open your PowerShell console, the module will be automatically imported.
 
 We also recommend that you create aliases for the most commonly used commands.
 
@@ -125,7 +129,7 @@ Set-MyRMInventoryPath "C:\path\to\your\Inventory.json"
 
 _The inventory uses the JSON format._
 
-### add a client
+### Add a client
 
 Clients are defined programs that are interpreted and executed when you invoke a connection.
 
@@ -148,7 +152,7 @@ _Some tokens must be present in this string._
 | `<port>` | Yes      | Port to connect to on the remote host. |
 | `<user>` | No       | Name of the user to log in with.</br>If set, Invoke-MyRMConnection will ask for a username at each execution. |
 
-### add a connection
+### Add a connection
 
 To add a connection, use `Add-MyRMConnection`.
 For instance:
