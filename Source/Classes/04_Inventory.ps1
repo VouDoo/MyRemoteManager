@@ -95,37 +95,26 @@ class Inventory {
     }
 
     [bool] ClientExists([string] $Name) {
-        return $(if (($this.Clients | Where-Object -Property Name -EQ $Name).Count -gt 0) { $true } else { $false })
+        return ($this.Clients | Where-Object -Property Name -EQ $Name).Count -gt 0
     }
 
     [bool] ConnectionExists([string] $Name) {
-        return $(if (($this.Connections | Where-Object -Property Name -EQ $Name ).Count -gt 0) { $true } else { $false })
-    }
+        return ($this.Connections | Where-Object -Property Name -EQ $Name).Count -gt 0
 
-    [Client] GetClient([string] $Name) {
-        return $this.Clients | Where-Object -Property Name -EQ $Name
-    }
-
-    [Connection] GetConnection([string] $Name) {
-        return $this.Connections | Where-Object -Property Name -EQ $Name
     }
 
     [void] AddClient([Client] $Client) {
         if ($this.ClientExists($Client.Name)) {
             throw "Cannot add Client `"{0}`" as it already exists." -f $Client.Name
         }
-        else {
-            $this.Clients += $Client
-        }
+        $this.Clients += $Client
     }
 
     [void] AddConnection([Connection] $Connection) {
         if ($this.ConnectionExists($Connection.Name)) {
             throw "Cannot add Connection `"{0}`" as it already exists." -f $Connection.Name
         }
-        else {
-            $this.Connections += $Connection
-        }
+        $this.Connections += $Connection
     }
 
     [void] RemoveClient([string] $Name) {
@@ -134,5 +123,13 @@ class Inventory {
 
     [void] RemoveConnection([string] $Name) {
         $this.Connections = $this.Connections | Where-Object -Property Name -NE $Name
+    }
+
+    [Client] GetClient([string] $Name) {
+        return $this.Clients | Where-Object -Property Name -EQ $Name
+    }
+
+    [Connection] GetConnection([string] $Name) {
+        return $this.Connections | Where-Object -Property Name -EQ $Name
     }
 }
