@@ -24,7 +24,7 @@ $Out = Join-Path -Path $ProjectRoot -ChildPath "Out\$ModuleName\$ModuleVersion"
     # Tests
     Tests                       = $Tests
     TestsFiles                  = Get-ChildItem -File -Path $Tests -Include "*.Tests.ps1" -Recurse
-    TestsScriptAnalyzerSettings = Join-Path -Path $Tests -ChildPath "ScriptAnalyzerSettings.psd1"
+    TestsScriptAnalyzerSettings = Join-Path -Path $Tests -ChildPath "PSScriptAnalyzerSettings.psd1"
     TestOut                     = Join-Path -Path $Tests -ChildPath "TestResults.xml"
     # Out
     Out                         = $Out
