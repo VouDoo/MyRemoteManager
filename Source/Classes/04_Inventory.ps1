@@ -73,7 +73,7 @@ class Inventory {
         | Group-Object -Property Name
         | Where-Object -Property Count -GT 1
         if ($Duplicates) {
-            $Duplicates | ForEach-Object {
+            $Duplicates | ForEach-Object -Process {
                 Write-Warning -Message ("It exists more than one client named `"{0}`"." -f $_.Name)
             }
             return $true
@@ -86,7 +86,7 @@ class Inventory {
         | Group-Object -Property Name
         | Where-Object -Property Count -GT 1
         if ($Duplicates) {
-            $Duplicates | ForEach-Object {
+            $Duplicates | ForEach-Object -Process {
                 Write-Warning -Message ("It exists more than one connection named `"{0}`"." -f $_.Name)
             }
             return $true
