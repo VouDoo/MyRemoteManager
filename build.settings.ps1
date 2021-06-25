@@ -16,6 +16,7 @@ $Out = Join-Path -Path $ProjectRoot -ChildPath "Out\$ModuleName\$ModuleVersion"
     # Source
     Source                      = $Source
     SourceHeader                = Get-Item -Path "$Source\$ModuleName.Header.ps1"
+    SourceEnums                 = Get-ChildItem -Path "$Source\Enums\*.ps1"
     SourceClasses               = Get-ChildItem -Path "$Source\Classes\*.ps1" | Sort-Object Name
     #SourcePrivateFunctions = Get-ChildItem -Path "$Source\Private\*.ps1"
     SourcePublicFunctions       = Get-ChildItem -Path "$Source\Public\*.ps1"

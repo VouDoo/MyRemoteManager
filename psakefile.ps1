@@ -58,6 +58,12 @@ Task Build -depends Init, Clean {
     }
     "[build][module] Add header"
     Add-Content @ModuleFile -Value ((Get-Content -Path $Settings.SourceHeader.FullName) + "`n")
+    Add-Content @ModuleFile -Value "#region Enums"
+    $Settings.SourceEnums | ForEach-Object -Process {
+        "[build][module] Add enum {0}" -f $_.Basename
+        Add-Content @ModuleFile -Value (Get-Content -Path $_.FullName)
+    }
+    Add-Content @ModuleFile -Value "#endregion Enums`n"
     Add-Content @ModuleFile -Value "#region Classes"
     $Settings.SourceClasses | ForEach-Object -Process {
         "[build][module] Add class {0}" -f $_.Basename
