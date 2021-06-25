@@ -51,6 +51,10 @@ Task -name Build -depends Init, Clean {
     Add-Content @ModuleFile -Value "#endregion Public functions`n"
     "[build][module] Done"
 
+    # Data directory
+    "[build][datadir] Copy data directory"
+    Copy-Item -Path $Settings.SourceData -Destination $Settings.Out -Recurse
+
     # Manifest file
     "[build][manifest] Start build manifest file"
     "[build][manifest] Copy manifest"
