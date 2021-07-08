@@ -7,7 +7,7 @@ class Client : Item {
     [UInt16] $DefaultPort
     # Default connection scope
     [Scopes] $DefaultScope
-    # Is this client requires a user
+    # Does this client require a user
     [bool] $RequiresUser
     # Tokens
     static [string] $HostToken = "<host>"
@@ -32,7 +32,9 @@ class Client : Item {
         $this.Description = $Description
     }
 
-    hidden static [void] ValidateTokenizedArgs([string] $TokenizedArgs) {
+    hidden static [void] ValidateTokenizedArgs(
+        [string] $TokenizedArgs
+    ) {
         @(
             [Client]::HostToken,
             [Client]::PortToken
@@ -47,13 +49,36 @@ class Client : Item {
         return $TokenizedArgs -match [Client]::UserToken
     }
 
+    [string] GenerateArgs(
+        [string] $Hostname,
+        [UInt16] $Port
+    ) {
+        return $this.TokenizedArgs.Replace(
+            [Client]::HostToken, $Hostname
+        ).Replace(
+            [Client]::PortToken, $Port
+        )
+    }
+
+    [string] GenerateArgs(
+        [string] $Hostname,
+        [UInt16] $Port,
+        [string] $User
+    ) {
+        return $this.GenerateArgs($Hostname, $Port).Replace(
+            [Client]::UserToken, $User
+        )
+    }
+
     [string] ToString() {
         return "{0}, Description: `"{1}`", Scope: {2}, Command: `"{3} {4}`"" -f (
             $this.Name,
             $this.Description,
             $this.DefaultScope,
             $this.Executable,
-            $this.TokenizedArgs.Replace("<port>", "<port:{0}>" -f $this.DefaultPort)
+            $this.TokenizedArgs.Replace(
+                "<port>", "<port:{0}>" -f $this.DefaultPort
+            )
         )
     }
 }

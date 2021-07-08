@@ -73,6 +73,7 @@ function New-MyRMInventory {
                 [System.IO.IOException] "Inventory file already exists. Use `"-Force`" to overwrite it."
             )
         }
+
         if ($PSCmdlet.ShouldProcess($Inventory.Path, "Create inventory file")) {
             if (-not $NoDefaultClients.IsPresent) {
                 $Inventory.AddClient(

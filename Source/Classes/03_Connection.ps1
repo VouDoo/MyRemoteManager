@@ -4,51 +4,45 @@ class Connection : Item {
     [string] $Hostname
     # Port
     [UInt16] $Port
-    # Client
-    [Client] $Client
+    # Default client
+    [string] $DefaultClient
+    # Default user
+    [string] $DefaultUser
 
     Connection(
         [String] $Name,
         [String] $Hostname,
         [UInt16] $Port,
-        [Client] $Client,
+        [string] $DefaultClient,
+        [string] $DefaultUser,
         [string] $Description
     ) {
         $this.Name = $Name
         $this.Hostname = $Hostname.ToLower()
         $this.Port = $Port
-        $this.Client = $Client
+        $this.DefaultClient = $DefaultClient
+        $this.DefaultUser = $DefaultUser
         $this.Description = $Description
     }
 
-    [UInt16] GetPort() {
-        if ($this.Port -eq 0) {
-            return $this.Client.DefaultPort
-        }
-        return $this.Port
-    }
-
-    [string] GenerateArgs() {
-        return $this.Client.TokenizedArgs.Replace(
-            [Client]::HostToken, $this.Hostname
-        ).Replace(
-            [Client]::PortToken, $this.GetPort()
-        )
-    }
-
-    [string] GenerateArgs([string] $User) {
-        return $this.GenerateArgs().Replace(
-            [Client]::UserToken, $User
-        )
+    [bool] IsDefaultPort() {
+        return $this.Port -eq 0
     }
 
     [string] ToString() {
-        return "{0} ({1}): {2} to {3}:{4}" -f (
+        return "{0}, Description `"{1}`", Default client {2}, Target {3}:{4}" -f (
             $this.Name,
             $this.Description,
-            $this.Client.Name,
+            $this.DefaultClient,
             $this.Hostname,
-            $this.GetPort()
+            $(
+                if ($this.IsDefaultPort()) {
+                    "default"
+                }
+                else {
+                    $this.Port.ToString()
+                }
+            )
         )
     }
 }

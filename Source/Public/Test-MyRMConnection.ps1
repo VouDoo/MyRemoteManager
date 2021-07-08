@@ -44,15 +44,23 @@ function Test-MyRMConnection {
     }
 
     process {
-        $Connection = $Inventory.Connections | Where-Object -Property Name -EQ $Name
-        if (Test-Connection -TargetName $Connection.Hostname -TcpPort $Connection.GetPort() -TimeoutSeconds 3) {
+        $Connection = $Inventory.GetConnection($Name)
+
+        $Port = if ($Connection.IsDefaultPort()) {
+            $Inventory.GetClient($Connection.DefaultClient).DefaultPort
+        }
+        else {
+            $Connection.Port
+        }
+
+        if (Test-Connection -TargetName $Connection.Hostname -TcpPort $Port -TimeoutSeconds 3) {
             Write-Information -MessageData (
-                "Connection {0} is up." -f $Connection.ToString()
+                "Connection {0} is up on port {1}." -f $Connection.ToString(), $Port
             )
         }
         else {
             Write-Error -Exception (
-                [System.Exception] ("Connection: {0} is down." -f $Connection.ToString())
+                [System.Exception] ("Connection: {0} is down on port {1}." -f $Connection.ToString(), $Port)
             )
         }
     }

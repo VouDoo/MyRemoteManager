@@ -137,7 +137,7 @@ To add a client, use `Add-MyRMClient`.
 For instance:
 
 ```powershell
-Add-MyRMClient -Name MySSH -Executable "ssh.exe" -Arguments "-l <user> -p <port> <host>" -DefaultPort 22 -Scope Console -Description "My first SSH client"
+Add-MyRMClient -Name MySSH -Executable "ssh.exe" -Arguments "-l <user> -p <port> <host>" -DefaultPort 22 -DefaultScope Console -Description "My first SSH client"
 ```
 
 Find out more examples [here](examples/clients.md).
@@ -159,7 +159,7 @@ _If not specified, the default scope is set as `Console`._
 | Scope       | Default | Description |
 |:-----------:| :-----: | :---------- |
 | `Console`   | Yes     | Invoke the connection process in the current console. |
-| `External`  | No      | Invoke the connection process as an independant process. |
+| `External`  | No      | Invoke the connection process as an independant process (external window). |
 | `Undefined` | No      | Undefined scope.</br>A scope must be specified when the connection is invoked. |
 
 ### Add a connection
@@ -168,7 +168,7 @@ To add a connection, use `Add-MyRMConnection`.
 For instance:
 
 ```powershell
-Add-MyRMConnection -Name Perseverance -Hostname perseverance.mars.solarsys -Client MySSH -Description "My connection to the Perseverance Rover"
+Add-MyRMConnection -Name Perseverance -Hostname perseverance.mars.solarsys -DefaultClient MySSH -DefaultUser nasa -Description "My connection to the Perseverance Rover"
 ```
 
 **Tip**: _Use the `TAB` key to autocomplete the name of the client._
@@ -195,13 +195,13 @@ Use [the `Get-Help` Cmdlet](https://docs.microsoft.com/en-us/powershell/module/m
 Here are some ideas that future releases might cover:
 
 - Make client arguments more flexible.
-  - Remove required tokens when it is possible.
-  - Add extra tokens with custom features.
+- Add extra tokens with custom features.
 - Implement specific error exceptions.
 - Optimize code.
 - Provide better documentation.
-- Keep it simple, stupid.
 - And more...
+
+I [KISS](https://en.wikipedia.org/wiki/KISS_principle) it...
 
 ## Support
 

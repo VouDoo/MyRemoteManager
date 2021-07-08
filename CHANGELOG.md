@@ -11,6 +11,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Scopes in which connections can be invoked
 - `DefaultScope` parameter in `Add-MyRMClient` to define a default scope associated to the new client
+- Default user for connections
+- `DefaultUser` parameter in `Add-MyRMConnection` to define a default user associated to the new connection
+- `DefaultClient` parameter in `Add-MyRMConnection` to define a default client associated to the new connection
+- `Client` parameter (alias `c`) in `Invoke-MyRMConnection` to define a client to use to initiate the connection
+- `User` parameter (alias `u`) in `Invoke-MyRMConnection` to define a user to connect with
+- `Scope` parameter (alias `x`) in `Invoke-MyRMConnection` to define a scope in which the connection will be invoked
+- Debug messages in `Invoke-MyRMConnection` Cmdlet
+
+### Changed
+
+- Connections have a default client instead of a "fixed" client
+
+### Removed
+
+- `RunInCurrentScope` parameter (alias `X`) in `Invoke-MyRMConnection` to start the connection process in the current console
 
 ## [0.2.0]
 
