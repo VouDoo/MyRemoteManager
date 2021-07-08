@@ -22,6 +22,9 @@ function Add-MyRMClient {
     .PARAMETER DefaultPort
     Network port to use if the connection has no defined port.
 
+    .PARAMETER DefaultScope
+    Default scope in which a connection will be invoked.
+
     .PARAMETER Description
     Short description for the client.
 
@@ -35,7 +38,7 @@ function Add-MyRMClient {
     PS> Add-MyRMClient -Name SSH -Executable "ssh.exe" -Arguments "-l <user> -p <port> <host>" -DefaultPort 22
 
     .EXAMPLE
-    PS> Add-MyRMClient -Name MyCustomClient -Executable "client.exe" -Arguments "--hostname <host> --port <port>" -DefaultPort 666 -Description "My custom client"
+    PS> Add-MyRMClient -Name MyCustomClient -Executable "client.exe" -Arguments "--hostname <host> --port <port>" -DefaultPort 666 -DefaultScope External -Description "My custom client"
 
     #>
 
@@ -71,6 +74,12 @@ function Add-MyRMClient {
         [UInt16] $DefaultPort,
 
         [Parameter(
+            HelpMessage = "Default scope in which a connection will be invoked."
+        )]
+        [ValidateNotNullOrEmpty()]
+        [Scopes] $DefaultScope = [Scopes]::Console,
+
+        [Parameter(
             HelpMessage = "Short description of the client."
         )]
         [string] $Description
@@ -87,8 +96,10 @@ function Add-MyRMClient {
             $Executable,
             $Arguments,
             $DefaultPort,
+            $DefaultScope,
             $Description
         )
+
         if (
             $PSCmdlet.ShouldProcess(
                 "Inventory file {0}" -f $Inventory.Path,

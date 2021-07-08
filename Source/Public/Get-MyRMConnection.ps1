@@ -59,16 +59,17 @@ function Get-MyRMConnection {
         $Connections = @()
         foreach ($c in $Inventory.Connections) {
             $Connections += [PSCustomObject] @{
-                Name        = $c.Name
-                Hostname    = $c.Hostname
-                Port        = if ($c.Port -eq 0) {
-                    $c.Client.DefaultPort
+                Name          = $c.Name
+                Hostname      = $c.Hostname
+                Port          = if ($c.IsDefaultPort) {
+                    $Inventory.GetClient($c.DefaultClient).DefaultPort
                 }
                 else {
                     $c.Port
                 }
-                Client      = $c.Client.Name
-                Description = $c.Description
+                DefaultClient = $c.DefaultClient
+                DefaultUser   = $c.DefaultUser
+                Description   = $c.Description
             }
         }
     }
@@ -77,7 +78,7 @@ function Get-MyRMConnection {
         $Connections
         | Where-Object -Property Name -Like $Name
         | Where-Object -Property Hostname -Like $Hostname
-        | Where-Object -Property Client -Like $Client
+        | Where-Object -Property DefaultClient -Like $Client
         | Sort-Object -Property Name
     }
 }

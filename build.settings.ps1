@@ -16,14 +16,16 @@ $Out = Join-Path -Path $ProjectRoot -ChildPath "Out\$ModuleName\$ModuleVersion"
     # Source
     Source                      = $Source
     SourceHeader                = Get-Item -Path "$Source\$ModuleName.Header.ps1"
+    SourceEnum                  = Get-ChildItem -Path "$Source\Enum\*.ps1"
     SourceClasses               = Get-ChildItem -Path "$Source\Classes\*.ps1" | Sort-Object Name
     #SourcePrivateFunctions = Get-ChildItem -Path "$Source\Private\*.ps1"
     SourcePublicFunctions       = Get-ChildItem -Path "$Source\Public\*.ps1"
+    #SourceData                  = Join-Path -Path $Source -ChildPath "Data"
     SourceManifest              = Join-Path -Path $Source -ChildPath "$ModuleName.psd1"
     # Tests
     Tests                       = $Tests
     TestsFiles                  = Get-ChildItem -File -Path $Tests -Include "*.Tests.ps1" -Recurse
-    TestsScriptAnalyzerSettings = Join-Path -Path $Tests -ChildPath "ScriptAnalyzerSettings.psd1"
+    TestsScriptAnalyzerSettings = Join-Path -Path $Tests -ChildPath "PSScriptAnalyzerSettings.psd1"
     TestOut                     = Join-Path -Path $Tests -ChildPath "TestResults.xml"
     # Out
     Out                         = $Out

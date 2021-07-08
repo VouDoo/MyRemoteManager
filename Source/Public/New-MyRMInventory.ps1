@@ -73,6 +73,7 @@ function New-MyRMInventory {
                 [System.IO.IOException] "Inventory file already exists. Use `"-Force`" to overwrite it."
             )
         }
+
         if ($PSCmdlet.ShouldProcess($Inventory.Path, "Create inventory file")) {
             if (-not $NoDefaultClients.IsPresent) {
                 $Inventory.AddClient(
@@ -81,6 +82,7 @@ function New-MyRMInventory {
                             "C:\Windows\System32\OpenSSH\ssh.exe",
                             "-l <user> -p <port> <host>",
                             22,
+                            [Scopes]::Console,
                             "OpenSSH (Microsoft Windows feature)"
                         )
                     )
@@ -91,6 +93,7 @@ function New-MyRMInventory {
                             "putty.exe",
                             "-ssh -P <port> <user>@<host>",
                             22,
+                            [Scopes]::External,
                             "PuTTY using SSH protocol"
                         )
                     )
@@ -101,6 +104,7 @@ function New-MyRMInventory {
                             "C:\Windows\System32\mstsc.exe",
                             "/v:<host>:<port> /fullscreen",
                             3389,
+                            [Scopes]::External,
                             "Microsoft Remote Desktop"
                         )
                     )

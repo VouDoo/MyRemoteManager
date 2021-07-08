@@ -18,8 +18,11 @@ function Add-MyRMConnection {
     Port to connect to on the remote host.
     If not set, it will use the default port of the client.
 
-    .PARAMETER Client
-    Name of the client.
+    .PARAMETER DefaultClient
+    Name of the default client.
+
+    .PARAMETER DefaultUser
+    Default client to use to connect to the remote host.
 
     .PARAMETER Description
     Short description for the connection.
@@ -31,10 +34,13 @@ function Add-MyRMConnection {
     System.Void. None.
 
     .EXAMPLE
-    PS> Add-MyRMConnection -Name myconn -Hostname myhost -Client SSH
+    PS> Add-MyRMConnection -Name myconn -Hostname myhost -DefaultClient SSH
 
     .EXAMPLE
-    PS> Add-MyRMConnection -Name myconn -Hostname myhost -Port 2222 -Client SSH -Description "My connection"
+    PS> Add-MyRMConnection -Name myrdpconn -Hostname myhost -DefaultClient RDP -Description "My RDP connection"
+
+    .EXAMPLE
+    PS> Add-MyRMConnection -Name mysshconn -Hostname myhost -Port 2222 -DefaultClient SSH -DefaultUser myuser -Description "My SSH connection"
 
     #>
 
@@ -62,11 +68,15 @@ function Add-MyRMConnection {
 
         [Parameter(
             Mandatory = $true,
-            HelpMessage = "Client to use to connect to the remote host."
+            HelpMessage = "Default client to use to connect to the remote host."
         )]
-        [ValidateNotNullOrEmpty()]
-        [ValidateSet( [ValidateClientName] )]
-        [string] $Client,
+        [ValidateSet([ValidateClientName])]
+        [string] $DefaultClient,
+
+        [Parameter(
+            HelpMessage = "Default user to use to connect to the remote host."
+        )]
+        [string] $DefaultUser,
 
         [Parameter(
             HelpMessage = "Short description of the connection."
@@ -84,9 +94,11 @@ function Add-MyRMConnection {
             $Name,
             $Hostname,
             $Port,
-            $Inventory.GetClient($Client),
+            $DefaultClient,
+            $DefaultUser,
             $Description
         )
+
         if ($PSCmdlet.ShouldProcess(
                 "Inventory file {0}" -f $Inventory.Path,
                 "Add Connection {0}" -f $Connection.ToString()

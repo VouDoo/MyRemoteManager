@@ -1,7 +1,10 @@
 {
+    // See https://code.visualstudio.com/docs/getstarted/settings
+    // for the documentation about the settings.json format
     "powershell.codeFormatting.preset": "Stroustrup",
     "powershell.codeFormatting.addWhitespaceAroundPipe": true,
     "powershell.codeFormatting.useCorrectCasing": true,
+    "powershell.codeFormatting.autoCorrectAliases": true,
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
     "editor.tabSize": 4,

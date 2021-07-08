@@ -29,24 +29,32 @@ class Inventory {
                 $c.Executable,
                 $c.TokenizedArgs,
                 $c.DefaultPort,
+                $c.DefaultScope,
                 $c.Description
             )
         }
         if ($this.ClientNameDuplicateExists()) {
-            Write-Warning -Message ("Fix it by renaming the duplicated client names in the inventory file: {0}" -f [Inventory]::GetPath())
+            Write-Warning -Message ("Fix the inventory by renaming the duplicated client names in the inventory file: {0}" -f (
+                    [Inventory]::GetPath()
+                )
+            )
         }
         foreach ($c in $Items.Connections) {
-            $Client = $this.Clients | Where-Object -Property Name -EQ $c.Client
             $this.Connections += New-Object -TypeName Connection -ArgumentList @(
                 $c.Name,
                 $c.Hostname,
                 $c.Port,
-                $Client,
+                $c.DefaultClient,
+                $c.DefaultUser,
                 $c.Description
             )
         }
         if ($this.ConnectionNameDuplicateExists()) {
-            Write-Warning -Message ("Fix it by renaming the duplicated connection names in the inventory file: {0}" -f [Inventory]::GetPath())
+            Write-Warning -Message (
+                "Fix the inventory by renaming the duplicated connection names in the inventory file: {0}" -f (
+                    [Inventory]::GetPath()
+                )
+            )
         }
     }
 
@@ -57,7 +65,6 @@ class Inventory {
         }
         foreach ($c in $this.Connections) {
             $Connection = $c.Splat()
-            $Connection.Client = $Connection.Client.Name
             $Items.Connections += $Connection
         }
         $Json = ConvertTo-Json -InputObject $Items -Depth 3
@@ -94,13 +101,20 @@ class Inventory {
         return $false
     }
 
+    [Client] GetClient([string] $Name) {
+        return $this.Clients | Where-Object -Property Name -EQ $Name
+    }
+
+    [Connection] GetConnection([string] $Name) {
+        return $this.Connections | Where-Object -Property Name -EQ $Name
+    }
+
     [bool] ClientExists([string] $Name) {
-        return ($this.Clients | Where-Object -Property Name -EQ $Name).Count -gt 0
+        return $this.GetClient($Name).Count -gt 0
     }
 
     [bool] ConnectionExists([string] $Name) {
-        return ($this.Connections | Where-Object -Property Name -EQ $Name).Count -gt 0
-
+        return $this.GetConnection($Name).Count -gt 0
     }
 
     [void] AddClient([Client] $Client) {
@@ -123,13 +137,5 @@ class Inventory {
 
     [void] RemoveConnection([string] $Name) {
         $this.Connections = $this.Connections | Where-Object -Property Name -NE $Name
-    }
-
-    [Client] GetClient([string] $Name) {
-        return $this.Clients | Where-Object -Property Name -EQ $Name
-    }
-
-    [Connection] GetConnection([string] $Name) {
-        return $this.Connections | Where-Object -Property Name -EQ $Name
     }
 }

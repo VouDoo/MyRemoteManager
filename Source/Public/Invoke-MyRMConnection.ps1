@@ -11,8 +11,14 @@ function Invoke-MyRMConnection {
     .PARAMETER Name
     Name of the connection.
 
-    .PARAMETER RunInCurrentScope
-    Starts the connection in the current PowerShell scope.
+    .PARAMETER Client
+    Name of the client to use to initiate the connection.
+
+    .PARAMETER User
+    Name of the user to connect with.
+
+    .PARAMETER Scope
+    Scope in which the connection will be invoked.
 
     .INPUTS
     None. You cannot pipe objects to Invoke-MyRMConnection.
@@ -24,7 +30,7 @@ function Invoke-MyRMConnection {
     PS> Invoke-MyRMConnection myconn
 
     .EXAMPLE
-    PS> Invoke-MyRMConnection -Name myconn
+    PS> Invoke-MyRMConnection -Name myconn -Client SSH -User root -Scope Console
 
     #>
 
@@ -36,15 +42,27 @@ function Invoke-MyRMConnection {
             Mandatory = $true,
             HelpMessage = "Name of the connection."
         )]
-        [ValidateNotNullOrEmpty()]
-        [ValidateSet( [ValidateConnectionName] )]
+        [ValidateSet([ValidateConnectionName])]
         [string] $Name,
 
         [Parameter(
-            HelpMessage = "Start the connection in the current PowerShell scope."
+            HelpMessage = "Name of the client to use to initiate the connection."
         )]
-        [Alias("X")]
-        [switch] $RunInCurrentScope
+        [ValidateSet([ValidateClientName])]
+        [Alias("c")]
+        [string] $Client,
+
+        [Parameter(
+            HelpMessage = "Name of the user to connect with."
+        )]
+        [Alias("u")]
+        [string] $User,
+
+        [Parameter(
+            HelpMessage = "Scope in which the connection will be invoked."
+        )]
+        [Alias("x")]
+        [Scopes] $Scope
     )
 
     begin {
@@ -53,25 +71,78 @@ function Invoke-MyRMConnection {
     }
 
     process {
-        $Connection = $Inventory.Connections | Where-Object -Property Name -EQ $Name
-        if ($PSCmdlet.ShouldProcess($Connection.ToString(), "Initiate connection")) {
-            if ([Client]::UserTokenExists($Connection.Client.TokenizedArgs)) {
-                $User = Read-Host -Prompt ("Username" -f $Connection.Hostname)
-                $Arguments = $Connection.GenerateArgs($User)
+        $Invocation = @{}
+
+        $Invocation.Connection = $Inventory.GetConnection($Name)
+        Write-Debug -Message ("Invoke connection {0}" -f $Invocation.Connection.ToString())
+
+        $Invocation.Client = if ($Client) {
+            $Inventory.GetClient($Client)
+        }
+        else {
+            $Inventory.GetClient($Invocation.Connection.DefaultClient)
+        }
+        Write-Debug -Message ("Invoke connection with client {0}" -f $Invocation.Client.ToString())
+
+        $Invocation.Port = if ($Invocation.Connection.IsDefaultPort()) {
+            $Invocation.Client.DefaultPort
+        }
+        else {
+            $Invocation.Connection.Port
+        }
+        Write-Debug -Message ("Invoke connection on port {0}" -f $Invocation.Port)
+
+        $Invocation.Executable = $Invocation.Client.Executable
+        $Invocation.Arguments = if ($Invocation.Client.RequiresUser) {
+            if ($User) {
+                $Invocation.Client.GenerateArgs(
+                    $Invocation.Connection.Hostname,
+                    $Invocation.Port,
+                    $User
+                )
+            }
+            elseif ($Invocation.Connection.DefaultUser) {
+                $Invocation.Client.GenerateArgs(
+                    $Invocation.Connection.Hostname,
+                    $Invocation.Port,
+                    $Invocation.Connection.DefaultUser
+                )
             }
             else {
-                $Arguments = $Connection.GenerateArgs()
+                throw "Cannot invoke connection: A user must be specified."
             }
-            $Process = @{
-                FilePath     = $Connection.Client.Executable
-                ArgumentList = $Arguments
-            }
-            if ($RunInCurrentScope.IsPresent) {
-                $Command = "{0} {1}" -f $Process.FilePath, $Process.ArgumentList
-                Invoke-Expression -Command $Command
-            }
-            else {
-                Start-Process @Process
+        }
+        else {
+            $Invocation.Client.GenerateArgs(
+                $Invocation.Connection.Hostname,
+                $Invocation.Port
+            )
+        }
+        $Invocation.Command = "{0} {1}" -f $Invocation.Executable, $Invocation.Arguments
+        Write-Debug -Message ("Invoke connection with command `"{0}`"" -f $Invocation.Command)
+
+        $Invocation.Scope = if ($Scope) {
+            $Scope
+        }
+        else {
+            $Invocation.Client.DefaultScope
+        }
+        Write-Debug -Message ("Invoke connection in scope `"{0}`"" -f $Invocation.Scope)
+
+        if ($PSCmdlet.ShouldProcess($Invocation.Connection.ToString(), "Initiate connection")) {
+            switch ($Invocation.Scope) {
+                ([Scopes]::Console) {
+                    Invoke-Expression -Command $Invocation.Command
+                }
+                ([Scopes]::External) {
+                    Start-Process -FilePath $Invocation.Executable -ArgumentList $Invocation.Arguments
+                }
+                ([Scopes]::Undefined) {
+                    throw "Cannot invoke connection: Scope is undefined."
+                }
+                default {
+                    throw "Cannot invoke connection: Scope is unknown."
+                }
             }
         }
     }

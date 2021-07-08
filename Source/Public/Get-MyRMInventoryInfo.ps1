@@ -34,6 +34,7 @@ function Get-MyRMInventoryInfo {
             $Inventory.ReadFile()
             $FileExists = $true
         }
+
         $InventoryInfo = [PSCustomObject] @{
             Path                = $Inventory.Path
             EnvVariable         = [Inventory]::EnvVariable
