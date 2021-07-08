@@ -11,8 +11,8 @@ function Invoke-MyRMConnection {
     .PARAMETER Name
     Name of the connection.
 
-    .PARAMETER RunInCurrentScope
-    Starts the connection in the current PowerShell scope.
+    .PARAMETER Scope
+    Scope in which the connection will be invoked.
 
     .INPUTS
     None. You cannot pipe objects to Invoke-MyRMConnection.
@@ -41,10 +41,9 @@ function Invoke-MyRMConnection {
         [string] $Name,
 
         [Parameter(
-            HelpMessage = "Start the connection in the current PowerShell scope."
+            HelpMessage = "Scope in which the connection will be invoked."
         )]
-        [Alias("X")]
-        [switch] $RunInCurrentScope
+        [Scopes] $Scope
     )
 
     begin {
@@ -55,23 +54,32 @@ function Invoke-MyRMConnection {
     process {
         $Connection = $Inventory.Connections | Where-Object -Property Name -EQ $Name
         if ($PSCmdlet.ShouldProcess($Connection.ToString(), "Initiate connection")) {
-            if ([Client]::UserTokenExists($Connection.Client.TokenizedArgs)) {
+            if ($Connection.Client.RequiresUser) {
                 $User = Read-Host -Prompt ("Username" -f $Connection.Hostname)
                 $Arguments = $Connection.GenerateArgs($User)
             }
             else {
                 $Arguments = $Connection.GenerateArgs()
             }
+
             $Process = @{
                 FilePath     = $Connection.Client.Executable
                 ArgumentList = $Arguments
             }
-            if ($RunInCurrentScope.IsPresent) {
-                $Command = "{0} {1}" -f $Process.FilePath, $Process.ArgumentList
-                Invoke-Expression -Command $Command
-            }
-            else {
-                Start-Process @Process
+            switch ($Scope) {
+                ([Scopes]::Console) {
+                    $Command = "{0} {1}" -f $Process.FilePath, $Process.ArgumentList
+                    Invoke-Expression -Command $Command
+                }
+                ([Scopes]::External) {
+                    Start-Process @Process
+                }
+                ([Scopes]::Undefined) {
+                    throw "Cannot invoke connection: Scope is undefined."
+                }
+                default {
+                    throw "Cannot invoke connection: Scope is unknown."
+                }
             }
         }
     }

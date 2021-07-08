@@ -22,6 +22,9 @@ function Add-MyRMClient {
     .PARAMETER DefaultPort
     Network port to use if the connection has no defined port.
 
+    .PARAMETER DefaultScope
+    Default scope in which a connection will be invoked.
+
     .PARAMETER Description
     Short description for the client.
 
@@ -71,6 +74,13 @@ function Add-MyRMClient {
         [UInt16] $DefaultPort,
 
         [Parameter(
+            Mandatory = $false,
+            HelpMessage = "Default scope in which a connection will be invoked."
+        )]
+        [ValidateNotNullOrEmpty()]
+        [Scopes] $DefaultScope = [Scopes]::Console,
+
+        [Parameter(
             HelpMessage = "Short description of the client."
         )]
         [string] $Description
@@ -87,6 +97,7 @@ function Add-MyRMClient {
             $Executable,
             $Arguments,
             $DefaultPort,
+            $DefaultScope,
             $Description
         )
         if (

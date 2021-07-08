@@ -137,7 +137,7 @@ To add a client, use `Add-MyRMClient`.
 For instance:
 
 ```powershell
-Add-MyRMClient -Name MySSH -Executable "ssh.exe" -Arguments "-l <user> -p <port> <host>" -DefaultPort 22 -Description "My first SSH client"
+Add-MyRMClient -Name MySSH -Executable "ssh.exe" -Arguments "-l <user> -p <port> <host>" -DefaultPort 22 -Scope Console -Description "My first SSH client"
 ```
 
 Find out more examples [here](examples/clients.md).
@@ -151,6 +151,16 @@ _Some tokens must be present in this string._
 | `<host>` | Yes      | Name of the remote host. |
 | `<port>` | Yes      | Port to connect to on the remote host. |
 | `<user>` | No       | Name of the user to log in with.</br>If set, Invoke-MyRMConnection will ask for a username at each execution. |
+
+The `-Scope` parameter defines in which scope a connection will be invoked by default.
+
+_If not specified, the default scope is set as `Console`._
+
+| Scope       | Default | Description |
+|:-----------:| :-----: | :---------- |
+| `Console`   | Yes     | Invoke the connection process in the current console. |
+| `External`  | No      | Invoke the connection process as an independant process. |
+| `Undefined` | No      | Undefined scope.</br>A scope must be specified when the connection is invoked. |
 
 ### Add a connection
 

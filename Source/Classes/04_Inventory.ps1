@@ -29,6 +29,7 @@ class Inventory {
                 $c.Executable,
                 $c.TokenizedArgs,
                 $c.DefaultPort,
+                $c.DefaultScope,
                 $c.Description
             )
         }

@@ -30,15 +30,15 @@ class Connection : Item {
 
     [string] GenerateArgs() {
         return $this.Client.TokenizedArgs.Replace(
-            "<host>", $this.Hostname
+            [Client]::HostToken, $this.Hostname
         ).Replace(
-            "<port>", $this.GetPort()
+            [Client]::PortToken, $this.GetPort()
         )
     }
 
     [string] GenerateArgs([string] $User) {
         return $this.GenerateArgs().Replace(
-            "<user>", $User
+            [Client]::UserToken, $User
         )
     }
 

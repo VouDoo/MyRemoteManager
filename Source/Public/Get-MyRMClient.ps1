@@ -47,10 +47,11 @@ function Get-MyRMClient {
         $Clients = @()
         foreach ($c in $Inventory.Clients) {
             $Clients += [PSCustomObject] @{
-                Name        = $c.Name
-                Command     = "{0} {1}" -f $c.Executable, $c.TokenizedArgs
-                DefaultPort = $c.DefaultPort
-                Description = $c.Description
+                Name         = $c.Name
+                Command      = "{0} {1}" -f $c.Executable, $c.TokenizedArgs
+                DefaultPort  = $c.DefaultPort
+                DefaultScope = $c.DefaultScope
+                Description  = $c.Description
             }
         }
     }
