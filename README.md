@@ -186,7 +186,9 @@ Invoke-MyRMConnection Perseverance
 
 ### Get help
 
-Use [the `Get-Help` Cmdlet](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/get-help?view=powershell-7.1) to obtain more information about a command.
+Read help files in [docs/cmdlet-help](docs/cmdlet-help).
+
+You can also use [the `Get-Help` Cmdlet](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/get-help?view=powershell-7.1) to obtain more information about a command.
 
 ---
 
