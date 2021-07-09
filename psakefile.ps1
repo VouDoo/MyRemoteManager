@@ -2,9 +2,9 @@ Properties -properties {
     $Settings = . (Join-Path -Path $PSScriptRoot -ChildPath "build.settings.ps1")
 }
 
-Task -name default -depends Build
+Task default -depends Build
 
-Task -name Init {
+Task Init {
     # Show PowerShell version
     "[{0}][psenv] Building on {1} with PowerShell:" -f (
         $psake.context.currentTaskName,
@@ -25,12 +25,12 @@ Task Clean -depends Init {
     Get-ChildItem -Path $Settings.Out | Remove-Item -Recurse -Force -Verbose:$VerbosePreference
 } -description "Clean output directory"
 
-Task -name Build -depends Init, Clean {
+Task Build -depends Init, Clean {
     # Compile module file (.psm1)
     "[{0}][module] Start build module file." -f $psake.context.currentTaskName
     $ModuleFile = @{
         Path     = $Settings.OutModule
-        Encoding = $Settings.Encoding
+        Encoding = $Settings.OutEncoding
     }
     "[{0}][module] Add header." -f $psake.context.currentTaskName
     Add-Content @ModuleFile -Value ((Get-Content -Path $Settings.SourceHeader.FullName) + "`n")
@@ -78,13 +78,13 @@ Task -name Build -depends Init, Clean {
     "[{0}][manifest] Done." -f $psake.context.currentTaskName
 } -description "Clean and build module in output directory"
 
-Task -name Analyze -depends Build {
+Task Analyze -depends Build {
     # Import module
-    if (-not (Get-Module -name PSScriptAnalyzer -ListAvailable)) {
+    if (-not (Get-Module PSScriptAnalyzer -ListAvailable)) {
         "[{0}][import] PSScriptAnalyzer module is not installed. Skipping task." -f $psake.context.currentTaskName
         return
     }
-    Import-Module -Name PSScriptAnalyzer
+    Import-Module PSScriptAnalyzer
 
     # Set ScriptAnalyzer parameters
     $ScriptAnalyzerParams = @{
@@ -111,13 +111,13 @@ Task -name Analyze -depends Build {
     )
 } -description "Run PSScriptAnalyzer tests"
 
-Task -name Pester -depends Build {
+Task Pester -depends Build {
     # Import module
-    if (-not (Get-Module -name Pester -ListAvailable)) {
+    if (-not (Get-Module Pester -ListAvailable)) {
         "[{0}][import] Pester module is not installed. Skipping task." -f $psake.context.currentTaskName
         return
     }
-    Import-Module -Name Pester
+    Import-Module Pester
 
     # Set Pester parameters
     $env:PESTER_FILE_TO_TEST = $Settings.OutModule
@@ -139,8 +139,58 @@ Task -name Pester -depends Build {
     )
 } -description "Run Pester tests"
 
-Task -name Test -depends Analyze, Pester -description "Run combined tests"
+Task Test -depends Analyze, Pester -description "Run combined tests"
 
-Task -name Publish -depends Test {
+Task platyPS -depends Build {
+    # Import module
+    if (-not (Get-Module platyPS -ListAvailable)) {
+        "[{0}][import] platyPS module is not installed. Skipping task." -f $psake.context.currentTaskName
+        return
+    }
+    Import-Module platyPS
+
+    $ModuleInfo = Import-Module $Settings.OutManifest -Global -Force -PassThru
+
+    # Set MarkdownHelp parameters
+    $platyPSParams = @{
+        Module         = $Settings.ModuleName
+        OutputFolder   = $Settings.DocsHelpOut
+        WithModulePage = $false
+        Locale         = $Settings.DocsHelpLocale
+        Encoding       = [System.Text.Encoding]::GetEncoding($Settings.DocsHelpOutEncoding)
+        Verbose        = $VerbosePreference
+    }
+
+    try {
+        # Check if some commands have been exported
+        if ($ModuleInfo.ExportedCommands.Count -eq 0) {
+            "[{0}][import] No commands have been exported. Skipping task." -f $psake.context.currentTaskName
+            return
+        }
+
+        # Create help out directory
+        if (-not (Test-Path -Path $Settings.Out)) {
+            "[{0}][outdir] Create help out directory." -f $psake.context.currentTaskName
+            New-Item -Path $Settings.DocsHelpOut -ItemType Directory -Force -Verbose:$VerbosePreference | Out-Null
+        }
+
+        # Update markdown help files
+        #if (Get-ChildItem -Path $Settings.DocsHelpOut -Filter *.md -Recurse) {
+        #    Get-ChildItem -Path $Settings.DocsHelpOut -Directory | ForEach-Object -Process {
+        #        Update-MarkdownHelp -Path $_.FullName -Verbose:$VerbosePreference | Out-Null
+        #    }
+        #}
+
+        # Build markdown help files
+        New-MarkdownHelp @platyPSParams
+    }
+    finally {
+        Remove-Module $Settings.ModuleName
+    }
+} -description "Run platyPS to build Markdown help files"
+
+Task BuildHelp -depends platyPS -description "Build help files"
+
+Task Publish -depends Test {
     Write-Warning -Message "[{0}][alert] No repository defined yet." -f $psake.context.currentTaskName
 } -description "Publish module to defined PowerShell repository"

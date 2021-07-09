@@ -6,6 +6,7 @@ $ModuleVersion = "0.2.0"
 $Source = Join-Path -Path $ProjectRoot -ChildPath "Source"
 $Tests = Join-Path -Path $ProjectRoot -ChildPath "Tests"
 $Out = Join-Path -Path $ProjectRoot -ChildPath "Out\$ModuleName\$ModuleVersion"
+$Docs = Join-Path -Path $ProjectRoot -ChildPath "docs"
 
 @{
     # Project
@@ -31,6 +32,10 @@ $Out = Join-Path -Path $ProjectRoot -ChildPath "Out\$ModuleName\$ModuleVersion"
     Out                         = $Out
     OutModule                   = Join-Path -Path $Out -ChildPath "$ModuleName.psm1"
     OutManifest                 = Join-Path -Path $Out -ChildPath "$ModuleName.psd1"
-    # Other
-    Encoding                    = "utf8"
+    OutEncoding                 = "utf8"  # String
+    # Docs
+    Docs                        = $Docs
+    DocsHelpOut                 = Join-Path -Path $Docs -ChildPath "cmdlet-help"
+    DocsHelpOutEncoding         = "UTF-8"  # System.Text.Encoding
+    DocsHelpLocale              = "EN-US"
 }

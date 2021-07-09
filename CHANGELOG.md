@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `User` parameter (alias `u`) in `Invoke-MyRMConnection` to define a user to connect with
 - `Scope` parameter (alias `x`) in `Invoke-MyRMConnection` to define a scope in which the connection will be invoked
 - Debug messages in `Invoke-MyRMConnection` Cmdlet
+- Markdown help files in [docs/cmdlet-help](docs/cmdlet-help) generated with [platyPS module](https://github.com/PowerShell/platyPS)
 
 ### Changed
 

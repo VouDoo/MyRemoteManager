@@ -28,6 +28,12 @@
             "problemMatcher": []
         },
         {
+            "label": "build-help",
+            "type": "shell",
+            "command": "./build.ps1 BuildHelp",
+            "problemMatcher": []
+        },
+        {
             "label": "clean",
             "type": "shell",
             "command": "./build.ps1 Clean",

@@ -1,9 +1,10 @@
 @{
     PSDependOptions  = @{
-        Target     = 'CurrentUser'
-        Repository = 'PSGallery'
+        Target     = "CurrentUser"
+        Repository = "PSGallery"
     }
-    Pester           = '5.2.2'
-    psake            = 'latest'
-    PSScriptAnalyzer = 'latest'
+    Pester           = "5.2.2"
+    psake            = "latest"
+    PSScriptAnalyzer = "latest"
+    platyPS          = "latest"
 }
