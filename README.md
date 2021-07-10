@@ -1,5 +1,7 @@
 # MyRemoteManager
 
+![intro](medias/intro.gif)
+
 MyRemoteManager is a PowerShell module that contains a collection of functions for managing remote connections.
 
 It is a very (very) simplified version of mRemoteNG, MobaXterm, and other similar tools.
