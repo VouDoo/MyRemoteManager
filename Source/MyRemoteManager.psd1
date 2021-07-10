@@ -12,7 +12,7 @@
     RootModule           = 'MyRemoteManager.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.2.0'
+    ModuleVersion        = '0.3.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @("Core")
@@ -33,7 +33,7 @@
     Description          = 'A simple remote manager in PowerShell.'
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion    = '7.0'
+    PowerShellVersion    = '7.1'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''
