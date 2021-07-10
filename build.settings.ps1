@@ -38,4 +38,7 @@ $Docs = Join-Path -Path $ProjectRoot -ChildPath "docs"
     DocsHelpOut                 = Join-Path -Path $Docs -ChildPath "cmdlet-help"
     DocsHelpOutEncoding         = "UTF-8"  # System.Text.Encoding
     DocsHelpLocale              = "EN-US"
+    # Publish
+    PublishApiKeyEnvVar         = "{0}_API_KEY" -f $ModuleName
+    PublishRepository           = "PSGallery"
 }

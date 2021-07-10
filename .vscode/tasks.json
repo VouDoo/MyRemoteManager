@@ -34,6 +34,12 @@
             "problemMatcher": []
         },
         {
+            "label": "publish",
+            "type": "shell",
+            "command": "./build.ps1 Publish",
+            "problemMatcher": []
+        },
+        {
             "label": "clean",
             "type": "shell",
             "command": "./build.ps1 Clean",

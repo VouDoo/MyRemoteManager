@@ -192,5 +192,27 @@ Task platyPS -depends Build {
 Task BuildHelp -depends platyPS -description "Build help files"
 
 Task Publish -depends Test {
-    Write-Warning -Message "[{0}][alert] No repository defined yet." -f $psake.context.currentTaskName
-} -description "Publish module to defined PowerShell repository"
+    # Get API key from environment variable
+    $ApiKey = [System.Environment]::GetEnvironmentVariable($Settings.PublishApiKeyEnvVar)
+    if (-not $ApiKey) {
+        "[{0}][apikey] No API key found from environment variable `"{1}`". Skipping task." -f (
+            $psake.context.currentTaskName, $Settings.PublishApiKeyEnvVar
+        )
+        return
+    }
+
+    # Set Publish parameters
+    $PublishParams = @{
+        Path        = $Settings.Out
+        NuGetApiKey = $ApiKey
+        Repository  = $Settings.PublishRepository
+    }
+
+    # Publish module
+    "[{0}][module] Publish {1} module in {2}." -f (
+        $psake.context.currentTaskName,
+        $Settings.ModuleName,
+        $Settings.PublishRepository
+    )
+    Publish-Module @PublishParams
+} -description "Publish module to a defined PowerShell repository"
