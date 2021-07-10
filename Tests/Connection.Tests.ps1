@@ -25,28 +25,28 @@ BeforeAll {
 Describe "Add-MyRMConnection" {
     It "Adds a connection" {
         $Arguments = @{
-            Name        = "TestConnection1"
-            Hostname    = "conn1.test"
-            Port        = 1234
-            Client      = "TestClient"
-            Description = "A test connection."
+            Name          = "TestConnection1"
+            Hostname      = "conn1.test"
+            Port          = 1234
+            DefaultClient = "TestClient"
+            Description   = "A test connection."
         }
         Add-MyRMConnection @Arguments | Should -BeNullOrEmpty
     }
     It "Adds another connection" {
         $Arguments = @{
-            Name     = "TestConnection2"
-            Hostname = "conn2.test"
-            Client   = "TestClient"
+            Name          = "TestConnection2"
+            Hostname      = "conn2.test"
+            DefaultClient = "TestClient"
         }
         Add-MyRMConnection @Arguments | Should -BeNullOrEmpty
     }
     It "Adds a connection with an already used name, and fails" {
         $Arguments = @{
-            Name     = "TestConnection2"
-            Hostname = "conn2.test"
-            Port     = 2468
-            Client   = "TestClient"
+            Name          = "TestConnection2"
+            Hostname      = "conn2.test"
+            Port          = 2468
+            DefaultClient = "TestClient"
         }
         { Add-MyRMConnection @Arguments } | Should -Throw -ExpectedMessage "Cannot add Connection `"TestConnection2`" as it already exists."
     }
@@ -55,15 +55,15 @@ Describe "Get-MyRMConnection" {
     BeforeAll {
         @(
             @{
-                Name     = "TestConnection3"
-                Hostname = "Hostname.test"
-                Client   = "ClientTest"
+                Name          = "TestConnection3"
+                Hostname      = "Hostname.test"
+                DefaultClient = "ClientTest"
             },
             @{
-                Name     = "ConnectionTest4"
-                Hostname = "Hostname.test"
-                Port     = 6666
-                Client   = "TestClient"
+                Name          = "ConnectionTest4"
+                Hostname      = "Hostname.test"
+                Port          = 6666
+                DefaultClient = "TestClient"
             }
         ) | ForEach-Object -Process {
             Add-MyRMConnection @_
@@ -76,7 +76,7 @@ Describe "Get-MyRMConnection" {
         (Get-MyRMConnection).count | Should -BeExactly 4
     }
     It "Gets Connections filtered by name" {
-        (Get-MyRMConnection -Name "ConnectionTest*")[0].Name | Should -BeExactly "ConnectionTest4"
+        (Get-MyRMConnection -name "ConnectionTest*")[0].Name | Should -BeExactly "ConnectionTest4"
     }
     It "Gets Connections filtered by client name" {
         (Get-MyRMConnection -Client "ClientTest")[0].Name | Should -BeExactly "TestConnection3"
@@ -85,23 +85,23 @@ Describe "Get-MyRMConnection" {
         (Get-MyRMConnection -Hostname "conn2*")[0].Name | Should -BeExactly "TestConnection2"
     }
     It "Gets Connections filtered by name and client name" {
-        (Get-MyRMConnection -Name "*tion2" -Client "TestClient")[0].Name | Should -BeExactly "TestConnection2"
+        (Get-MyRMConnection -name "*tion2" -Client "TestClient")[0].Name | Should -BeExactly "TestConnection2"
     }
     It "Gets Connections filtered by name and hostname name" {
-        (Get-MyRMConnection -Name "*tion3" -Hostname "*.test")[0].Name | Should -BeExactly "TestConnection3"
+        (Get-MyRMConnection -name "*tion3" -Hostname "*.test")[0].Name | Should -BeExactly "TestConnection3"
     }
     It "Gets Connections filtered by name and client name that do not exist" {
-        (Get-MyRMConnection -Name "*Test3" -Client "TestClient") | Should -BeNullOrEmpty
+        (Get-MyRMConnection -name "*Test3" -Client "TestClient") | Should -BeNullOrEmpty
     }
     It "Gets Connections filtered by name and hostname name that do not exist" {
-        (Get-MyRMConnection -Name "*Test2" -Hostname "do.not.exist") | Should -BeNullOrEmpty
+        (Get-MyRMConnection -name "*Test2" -Hostname "do.not.exist") | Should -BeNullOrEmpty
     }
 }
 Describe "Remove-MyRMConnection" {
     It "Removes an existing connection" {
-        Remove-MyRMConnection -Name "TestConnection1" | Should -BeNullOrEmpty
+        Remove-MyRMConnection -name "TestConnection1" | Should -BeNullOrEmpty
     }
     It "Removes a connection that does not exist, and fails" {
-        { Remove-MyRMConnection -Name "TestConnection0" } | Should -Throw
+        { Remove-MyRMConnection -name "TestConnection0" } | Should -Throw
     }
 }

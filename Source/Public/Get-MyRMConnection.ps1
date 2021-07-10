@@ -1,23 +1,31 @@
 function Get-MyRMConnection {
 
     <#
+
     .SYNOPSIS
-        Gets MyRemoteManager connections.
+    Gets MyRemoteManager connections.
+
     .DESCRIPTION
-        Gets available connections from the MyRemoteManager inventory file.
-        connections can be filtered by their name and/or client name.
+    Gets available connections from the MyRemoteManager inventory file.
+    connections can be filtered by their name and/or client name.
+
     .PARAMETER Name
-        Filters connections by name.
+    Filters connections by name.
+
     .INPUTS
-        None. You cannot pipe objects to Get-MyRMConnection.
+    None. You cannot pipe objects to Get-MyRMConnection.
+
     .OUTPUTS
-        PSCustomObject. Get-MyRMConnection returns objects with details of the available connections.
+    PSCustomObject. Get-MyRMConnection returns objects with details of the available connections.
+
     .EXAMPLE
-        PS> Get-MyRMConnection
-        (shows objects)
+    PS> Get-MyRMConnection
+    (objects)
+
     .EXAMPLE
-        PS> Get-MyRMConnection -Name "myproject_*" -Hostname "*.mydomain" -Client "*_myproject"
-        (shows filtered objects)
+    PS> Get-MyRMConnection -Name "myproject_*" -Hostname "*.mydomain" -Client "*_myproject"
+    (filtered objects)
+
     #>
 
     [OutputType([PSCustomObject[]])]
@@ -41,32 +49,36 @@ function Get-MyRMConnection {
         [ValidateNotNullOrEmpty()]
         [string] $Client = "*"
     )
+
     begin {
         $Inventory = New-Object -TypeName Inventory
         $Inventory.ReadFile()
     }
+
     process {
         $Connections = @()
         foreach ($c in $Inventory.Connections) {
             $Connections += [PSCustomObject] @{
-                Name        = $c.Name
-                Hostname    = $c.Hostname
-                Port        = if ($c.Port -eq 0) {
-                    $c.Client.DefaultPort
+                Name          = $c.Name
+                Hostname      = $c.Hostname
+                Port          = if ($c.IsDefaultPort) {
+                    $Inventory.GetClient($c.DefaultClient).DefaultPort
                 }
                 else {
                     $c.Port
                 }
-                Client      = $c.Client.Name
-                Description = $c.Description
+                DefaultClient = $c.DefaultClient
+                DefaultUser   = $c.DefaultUser
+                Description   = $c.Description
             }
         }
     }
+
     end {
         $Connections
         | Where-Object -Property Name -Like $Name
         | Where-Object -Property Hostname -Like $Hostname
-        | Where-Object -Property Client -Like $Client
+        | Where-Object -Property DefaultClient -Like $Client
         | Sort-Object -Property Name
     }
 }

@@ -6,7 +6,8 @@ It is a very (very) simplified version of mRemoteNG, MobaXterm, and other simila
 
 ## License
 
-MyRemoteManager is released under the terms of the MIT license. See [LICENSE](LICENSE) for more information or see <https://opensource.org/licenses/MIT>.
+MyRemoteManager is released under the terms of the MIT license.
+See [LICENSE](LICENSE) for more information or see <https://opensource.org/licenses/MIT>.
 
 ---
 
@@ -18,13 +19,14 @@ To install the PowerShell module, follow one of these methods:
 - [Get released versions](#get-released-versions)
 - [Build from Source](#build-from-source)
 
-Please note that the module is only available for PowerShell Core (6 or later).
+Please note that the module is only available for PowerShell Core (7 or later).
 
 Get the latest version of PS Core from [the official PowerShell repository](https://github.com/PowerShell/PowerShell/releases).
 
 ### Install from PS Gallery
 
-The module is published on PowerShell Gallery. See <https://www.powershellgallery.com/packages/MyRemoteManager>.
+The module is published on PowerShell Gallery.
+See <https://www.powershellgallery.com/packages/MyRemoteManager>.
 
 To install it, run:
 
@@ -34,7 +36,8 @@ Install-Module -Name MyRemoteManager -Repository PSGallery
 
 ### Get released versions
 
-Download `MyRemoteManager.zip` from [the "Releases" page](https://github.com/VouDoo/MyRemoteManager/releases) and extract it in `C:\Users\<your_user>\Documents\PowerShell\Modules\`.
+Download `MyRemoteManager.zip` from [the "Releases" page](https://github.com/VouDoo/MyRemoteManager/releases).
+Extract it in `C:\Users\<your_user>\Documents\PowerShell\Modules\`.
 
 ### Build from Source
 
@@ -86,7 +89,8 @@ Download `MyRemoteManager.zip` from [the "Releases" page](https://github.com/Vou
     Get-Command -Module MyRemoteManager
     ```
 
-The fastest way to use the module is to import it from your [PowerShell profile](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.1). Then, each time you will open your PowerShell console, the module will be automatically imported.
+The fastest way to use the module is to import it from your [PowerShell profile](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.1).
+Then, each time you will open your PowerShell console, the module will be automatically imported.
 
 We also recommend that you create aliases for the most commonly used commands.
 
@@ -125,7 +129,7 @@ Set-MyRMInventoryPath "C:\path\to\your\Inventory.json"
 
 _The inventory uses the JSON format._
 
-### add a client
+### Add a client
 
 Clients are defined programs that are interpreted and executed when you invoke a connection.
 
@@ -133,7 +137,7 @@ To add a client, use `Add-MyRMClient`.
 For instance:
 
 ```powershell
-Add-MyRMClient -Name MySSH -Executable "ssh.exe" -Arguments "-l <user> -p <port> <host>" -DefaultPort 22 -Description "My first SSH client"
+Add-MyRMClient -Name MySSH -Executable "ssh.exe" -Arguments "-l <user> -p <port> <host>" -DefaultPort 22 -DefaultScope Console -Description "My first SSH client"
 ```
 
 Find out more examples [here](examples/clients.md).
@@ -148,13 +152,23 @@ _Some tokens must be present in this string._
 | `<port>` | Yes      | Port to connect to on the remote host. |
 | `<user>` | No       | Name of the user to log in with.</br>If set, Invoke-MyRMConnection will ask for a username at each execution. |
 
-### add a connection
+The `-Scope` parameter defines in which scope a connection will be invoked by default.
+
+_If not specified, the default scope is set as `Console`._
+
+| Scope       | Default | Description |
+|:-----------:| :-----: | :---------- |
+| `Console`   | Yes     | Invoke the connection process in the current console. |
+| `External`  | No      | Invoke the connection process as an independant process (external window). |
+| `Undefined` | No      | Undefined scope.</br>A scope must be specified when the connection is invoked. |
+
+### Add a connection
 
 To add a connection, use `Add-MyRMConnection`.
 For instance:
 
 ```powershell
-Add-MyRMConnection -Name Perseverance -Hostname perseverance.mars.solarsys -Client MySSH -Description "My connection to the Perseverance Rover"
+Add-MyRMConnection -Name Perseverance -Hostname perseverance.mars.solarsys -DefaultClient MySSH -DefaultUser nasa -Description "My connection to the Perseverance Rover"
 ```
 
 **Tip**: _Use the `TAB` key to autocomplete the name of the client._
@@ -172,7 +186,9 @@ Invoke-MyRMConnection Perseverance
 
 ### Get help
 
-Use [the `Get-Help` Cmdlet](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/get-help?view=powershell-7.1) to obtain more information about a command.
+Read help files in [docs/cmdlet-help](docs/cmdlet-help).
+
+You can also use [the `Get-Help` Cmdlet](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/get-help?view=powershell-7.1) to obtain more information about a command.
 
 ---
 
@@ -181,13 +197,13 @@ Use [the `Get-Help` Cmdlet](https://docs.microsoft.com/en-us/powershell/module/m
 Here are some ideas that future releases might cover:
 
 - Make client arguments more flexible.
-  - Remove required tokens when it is possible.
-  - Add extra tokens with custom features.
+- Add extra tokens with custom features.
 - Implement specific error exceptions.
 - Optimize code.
 - Provide better documentation.
-- Keep it simple, stupid.
 - And more...
+
+I [KISS](https://en.wikipedia.org/wiki/KISS_principle) it...
 
 ## Support
 

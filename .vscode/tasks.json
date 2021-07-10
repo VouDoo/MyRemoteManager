@@ -1,5 +1,5 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // See https://code.visualstudio.com/docs/editor/tasks#vscode
     // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
@@ -28,10 +28,22 @@
             "problemMatcher": []
         },
         {
+            "label": "build-help",
+            "type": "shell",
+            "command": "./build.ps1 BuildHelp",
+            "problemMatcher": []
+        },
+        {
+            "label": "publish",
+            "type": "shell",
+            "command": "./build.ps1 Publish",
+            "problemMatcher": []
+        },
+        {
             "label": "clean",
             "type": "shell",
             "command": "./build.ps1 Clean",
             "problemMatcher": []
-        }
+        },
     ]
 }

@@ -18,10 +18,11 @@ Describe "Add-MyRMClient" {
     }
     It "Adds another client" {
         $Arguments = @{
-            Name        = "TestClient2"
-            Executable  = "client2.exe"
-            Arguments   = "<port>:<host> --with <user>"
-            DefaultPort = 5678
+            Name         = "TestClient2"
+            Executable   = "client2.exe"
+            Arguments    = "<port>:<host> --with <user>"
+            DefaultPort  = 5678
+            DefaultScope = "External"
         }
         Add-MyRMClient @Arguments | Should -BeNullOrEmpty
     }
@@ -41,7 +42,17 @@ Describe "Add-MyRMClient" {
             Arguments   = "--port <prot> --host <host>"
             DefaultPort = 1234
         }
-        { Add-MyRMClient @Arguments } | Should -Throw -ExpectedMessage "*The command does not contain the following token: port*"
+        { Add-MyRMClient @Arguments } | Should -Throw -ExpectedMessage "*The argument line does not contain the following token: <port>*"
+    }
+    It "Adds a client with incorrect scope, and fails" {
+        $Arguments = @{
+            Name         = "IncorrectTestClient"
+            Executable   = "incorrectclient.exe"
+            Arguments    = "<port>:<host> --with <user>"
+            DefaultPort  = 2546
+            DefaultScope = "IncorrectScope"
+        }
+        { Add-MyRMClient @Arguments } | Should -Throw -ExpectedMessage "*Unable to match the identifier name IncorrectScope to a valid enumerator name*"
     }
 }
 Describe "Get-MyRMClient" {

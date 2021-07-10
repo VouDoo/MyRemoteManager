@@ -1,4 +1,10 @@
 class Inventory {
+    # Title for the inventory file
+    [string] $Title = "MyRemoteManager inventory"
+    # description for the inventory file
+    [string] $Description = "MyRemoteManager inventory file where the connections and clients are stored"
+    # Version of the inventory file
+    [string] $Version = "0.1.0"
     # Path to the inventory file
     [string] $Path = [Inventory]::GetPath()
     # Collection of Clients
@@ -23,41 +29,62 @@ class Inventory {
 
     [void] ReadFile() {
         $Items = Get-Content -Path $this.Path -Raw -Encoding ([Inventory]::Encoding) | ConvertFrom-Json -AsHashtable
+        if ($Items.Version -ne $this.Version) {
+            Write-Warning -Message (
+                "Version of the inventory file is not supported. Current version: `"{0}`", Expected version: `"{1}`"" -f (
+                    $Items.Version, $this.Version
+                )
+            )
+            throw "Version of the inventory file is not supported."
+        }
         foreach ($c in $Items.Clients) {
             $this.Clients += New-Object -TypeName Client -ArgumentList @(
                 $c.Name,
                 $c.Executable,
                 $c.TokenizedArgs,
                 $c.DefaultPort,
+                $c.DefaultScope,
                 $c.Description
             )
         }
         if ($this.ClientNameDuplicateExists()) {
-            Write-Warning -Message ("Fix it by renaming the duplicated client names in the inventory file: {0}" -f [Inventory]::GetPath())
+            Write-Warning -Message ("Fix the inventory by renaming the duplicated client names in the inventory file: {0}" -f (
+                    [Inventory]::GetPath()
+                )
+            )
         }
         foreach ($c in $Items.Connections) {
-            $Client = $this.Clients | Where-Object -Property Name -EQ $c.Client
             $this.Connections += New-Object -TypeName Connection -ArgumentList @(
                 $c.Name,
                 $c.Hostname,
                 $c.Port,
-                $Client,
+                $c.DefaultClient,
+                $c.DefaultUser,
                 $c.Description
             )
         }
         if ($this.ConnectionNameDuplicateExists()) {
-            Write-Warning -Message ("Fix it by renaming the duplicated connection names in the inventory file: {0}" -f [Inventory]::GetPath())
+            Write-Warning -Message (
+                "Fix the inventory by renaming the duplicated connection names in the inventory file: {0}" -f (
+                    [Inventory]::GetPath()
+                )
+            )
         }
     }
 
     [void] SaveFile() {
-        $Items = @{ Clients = @(); Connections = @() }
+        $Items = [ordered] @{
+            Title       = $this.Title
+            Description = $this.Description
+            Version     = $this.Version
+            Clients     = @()
+            Connections = @()
+        }
         foreach ($c in $this.Clients) {
             $Items.Clients += $c.Splat()
         }
         foreach ($c in $this.Connections) {
             $Connection = $c.Splat()
-            $Connection.Client = $Connection.Client.Name
             $Items.Connections += $Connection
         }
         $Json = ConvertTo-Json -InputObject $Items -Depth 3
@@ -73,7 +100,7 @@ class Inventory {
         | Group-Object -Property Name
         | Where-Object -Property Count -GT 1
         if ($Duplicates) {
-            $Duplicates | ForEach-Object {
+            $Duplicates | ForEach-Object -Process {
                 Write-Warning -Message ("It exists more than one client named `"{0}`"." -f $_.Name)
             }
             return $true
@@ -86,20 +113,12 @@ class Inventory {
         | Group-Object -Property Name
         | Where-Object -Property Count -GT 1
         if ($Duplicates) {
-            $Duplicates | ForEach-Object {
+            $Duplicates | ForEach-Object -Process {
                 Write-Warning -Message ("It exists more than one connection named `"{0}`"." -f $_.Name)
             }
             return $true
         }
         return $false
-    }
-
-    [bool] ClientExists([string] $Name) {
-        return $(if (($this.Clients | Where-Object -Property Name -EQ $Name).Count -gt 0) { $true } else { $false })
-    }
-
-    [bool] ConnectionExists([string] $Name) {
-        return $(if (($this.Connections | Where-Object -Property Name -EQ $Name ).Count -gt 0) { $true } else { $false })
     }
 
     [Client] GetClient([string] $Name) {
@@ -110,22 +129,26 @@ class Inventory {
         return $this.Connections | Where-Object -Property Name -EQ $Name
     }
 
+    [bool] ClientExists([string] $Name) {
+        return $this.GetClient($Name).Count -gt 0
+    }
+
+    [bool] ConnectionExists([string] $Name) {
+        return $this.GetConnection($Name).Count -gt 0
+    }
+
     [void] AddClient([Client] $Client) {
         if ($this.ClientExists($Client.Name)) {
             throw "Cannot add Client `"{0}`" as it already exists." -f $Client.Name
         }
-        else {
-            $this.Clients += $Client
-        }
+        $this.Clients += $Client
     }
 
     [void] AddConnection([Connection] $Connection) {
         if ($this.ConnectionExists($Connection.Name)) {
             throw "Cannot add Connection `"{0}`" as it already exists." -f $Connection.Name
         }
-        else {
-            $this.Connections += $Connection
-        }
+        $this.Connections += $Connection
     }
 
     [void] RemoveClient([string] $Name) {

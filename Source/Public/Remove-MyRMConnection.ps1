@@ -1,20 +1,28 @@
 function Remove-MyRMConnection {
 
     <#
+
     .SYNOPSIS
-        Removes MyRemoteManager connection.
+    Removes MyRemoteManager connection.
+
     .DESCRIPTION
-        Removes connection entry from the MyRemoteManager inventory file.
+    Removes connection entry from the MyRemoteManager inventory file.
+
     .PARAMETER Name
-        Name of the connection.
+    Name of the connection.
+
     .INPUTS
-        None. You cannot pipe objects to Remove-MyRMConnection.
+    None. You cannot pipe objects to Remove-MyRMConnection.
+
     .OUTPUTS
-        System.Void. None.
+    System.Void. None.
+
     .EXAMPLE
-        PS> Remove-MyRMConnection myconn
+    PS> Remove-MyRMConnection myconn
+
     .EXAMPLE
-        PS> Remove-MyRMConnection -Name myconn
+    PS> Remove-MyRMConnection -Name myconn
+
     #>
 
     [OutputType([void])]
@@ -29,10 +37,12 @@ function Remove-MyRMConnection {
         [ValidateSet( [ValidateConnectionName] )]
         [string] $Name
     )
+
     begin {
         $Inventory = New-Object -TypeName Inventory
         $Inventory.ReadFile()
     }
+
     process {
         if (
             $PSCmdlet.ShouldProcess(
@@ -45,5 +55,4 @@ function Remove-MyRMConnection {
             Write-Verbose -Message ("Connection `"{0}`" has been removed from the inventory." -f $Name)
         }
     }
-    end {}
 }
