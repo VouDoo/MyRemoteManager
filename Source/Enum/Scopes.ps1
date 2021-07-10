@@ -1,7 +1,7 @@
 enum Scopes {
     # Scopes in which a connection can be invoked
 
-    Undefined
-    Console
-    External
+    Undefined = 1
+    Console = 2
+    External = 3
 }
