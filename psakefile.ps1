@@ -46,12 +46,12 @@ Task Build -depends Init, Clean {
         Add-Content @ModuleFile -Value (Get-Content -Path $_.FullName)
     }
     Add-Content @ModuleFile -Value "#endregion Classes`n"
-    #Add-Content @ModuleFile -Value "#region Private functions"
-    #$Settings.SourcePrivateFunctions | ForEach-Object -Process {
-    #    "[{0}][module] Add private function {1}" -f $psake.context.currentTaskName, $_.Basename
-    #    Add-Content @ModuleFile -Value (Get-Content -Path $_.FullName)
-    #}
-    #Add-Content @ModuleFile -Value "#endregion Private functions`n"
+    Add-Content @ModuleFile -Value "#region Private functions"
+    $Settings.SourcePrivateFunctions | ForEach-Object -Process {
+        "[{0}][module] Add private function {1}" -f $psake.context.currentTaskName, $_.Basename
+        Add-Content @ModuleFile -Value (Get-Content -Path $_.FullName)
+    }
+    Add-Content @ModuleFile -Value "#endregion Private functions`n"
     Add-Content @ModuleFile -Value "#region Public functions"
     $Settings.SourcePublicFunctions | ForEach-Object -Process {
         "[{0}][module] Add public function `"{1}`"." -f $psake.context.currentTaskName, $_.Basename

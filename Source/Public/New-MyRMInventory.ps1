@@ -76,39 +76,9 @@ function New-MyRMInventory {
 
         if ($PSCmdlet.ShouldProcess($Inventory.Path, "Create inventory file")) {
             if (-not $NoDefaultClients.IsPresent) {
-                $Inventory.AddClient(
-                    (New-Object -TypeName Client -ArgumentList @(
-                            "OpenSSH",
-                            "C:\Windows\System32\OpenSSH\ssh.exe",
-                            "-l <user> -p <port> <host>",
-                            22,
-                            [Scopes]::Console,
-                            "OpenSSH (Microsoft Windows feature)"
-                        )
-                    )
-                )
-                $Inventory.AddClient(
-                    (New-Object -TypeName Client -ArgumentList @(
-                            "PuTTY_SSH",
-                            "putty.exe",
-                            "-ssh -P <port> <user>@<host>",
-                            22,
-                            [Scopes]::External,
-                            "PuTTY using SSH protocol"
-                        )
-                    )
-                )
-                $Inventory.AddClient(
-                    (New-Object -TypeName Client -ArgumentList @(
-                            "RD",
-                            "C:\Windows\System32\mstsc.exe",
-                            "/v:<host>:<port> /fullscreen",
-                            3389,
-                            [Scopes]::External,
-                            "Microsoft Remote Desktop"
-                        )
-                    )
-                )
+                New-DefaultClients | ForEach-Object -Process {
+                    $Inventory.AddClient($_)
+                }
             }
             $Inventory.SaveFile()
             Write-Verbose -Message ("Inventory file has been created: {0}" -f $Inventory.Path)
