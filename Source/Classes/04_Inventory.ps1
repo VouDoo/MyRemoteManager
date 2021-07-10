@@ -1,4 +1,10 @@
 class Inventory {
+    # Title for the inventory file
+    [string] $Title = "MyRemoteManager inventory"
+    # description for the inventory file
+    [string] $Description = "MyRemoteManager inventory file where the connections and clients are stored"
+    # Version of the inventory file
+    [string] $Version = "0.1.0"
     # Path to the inventory file
     [string] $Path = [Inventory]::GetPath()
     # Collection of Clients
@@ -23,6 +29,14 @@ class Inventory {
 
     [void] ReadFile() {
         $Items = Get-Content -Path $this.Path -Raw -Encoding ([Inventory]::Encoding) | ConvertFrom-Json -AsHashtable
+        if ($Items.Version -ne $this.Version) {
+            Write-Warning -Message (
+                "Version of the inventory file is not supported. Current version: `"{0}`", Expected version: `"{1}`"" -f (
+                    $Items.Version, $this.Version
+                )
+            )
+            throw "Version of the inventory file is not supported."
+        }
         foreach ($c in $Items.Clients) {
             $this.Clients += New-Object -TypeName Client -ArgumentList @(
                 $c.Name,
@@ -59,7 +73,13 @@ class Inventory {
     }
 
     [void] SaveFile() {
-        $Items = @{ Clients = @(); Connections = @() }
+        $Items = [ordered] @{
+            Title       = $this.Title
+            Description = $this.Description
+            Version     = $this.Version
+            Clients     = @()
+            Connections = @()
+        }
         foreach ($c in $this.Clients) {
             $Items.Clients += $c.Splat()
         }
