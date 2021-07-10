@@ -42,22 +42,23 @@ function New-File {
     #>
 
     [CmdletBinding()]
-    param(
+    param (
         [Parameter(Mandatory = $true)]
         [string] $Path,
 
         [switch] $Force
     )
 
-    begin(
+    begin {
         # ...
-    )
+    }
 
-    process(
+    process {
         # ...
-    )
+    }
 
-    end(
+    end {
         $Path
-    )
+    }
+}
 ```
