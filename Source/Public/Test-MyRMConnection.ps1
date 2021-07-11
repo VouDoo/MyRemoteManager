@@ -78,7 +78,7 @@ function Test-MyRMConnection {
         }
         catch {
             Write-Error -Message $_.Exception.Message
-            $Status = "CritialFailure"
+            $Status = "CriticalFailure"
         }
     }
 
