@@ -64,6 +64,8 @@ function New-MyRMInventory {
     )
 
     begin {
+        $ErrorActionPreference = "Stop"
+
         $Inventory = New-Object -TypeName Inventory
     }
 
@@ -80,8 +82,17 @@ function New-MyRMInventory {
                     $Inventory.AddClient($_)
                 }
             }
-            $Inventory.SaveFile()
-            Write-Verbose -Message ("Inventory file has been created: {0}" -f $Inventory.Path)
+            try {
+                $Inventory.SaveFile()
+                Write-Verbose -Message (
+                    "Inventory file has been created: {0}" -f $Inventory.Path
+                )
+            }
+            catch {
+                Write-Error -Message (
+                    "Cannot save inventory: {0}" -f $_.Exception.Message
+                )
+            }
         }
     }
 

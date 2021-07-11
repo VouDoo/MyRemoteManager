@@ -86,18 +86,34 @@ function Add-MyRMClient {
     )
 
     begin {
-        $Inventory = Import-Inventory
+        $ErrorActionPreference = "Stop"
+
+        try {
+            $Inventory = Import-Inventory
+        }
+        catch {
+            Write-Error -Message (
+                "Error inventory: {0}" -f $_.Exception.Message
+            )
+        }
     }
 
     process {
-        $Client = New-Object -TypeName Client -ArgumentList @(
-            $Name,
-            $Executable,
-            $Arguments,
-            $DefaultPort,
-            $DefaultScope,
-            $Description
-        )
+        try {
+            $Client = New-Object -TypeName Client -ArgumentList @(
+                $Name,
+                $Executable,
+                $Arguments,
+                $DefaultPort,
+                $DefaultScope,
+                $Description
+            )
+        }
+        catch {
+            Write-Error -Message (
+                "Cannot create new client: {0}" -f $_.Exception.Message
+            )
+        }
 
         if ($PSCmdlet.ShouldProcess(
                 "Inventory file {0}" -f $Inventory.Path,
@@ -105,8 +121,17 @@ function Add-MyRMClient {
             )
         ) {
             $Inventory.AddClient($Client)
-            $Inventory.SaveFile()
-            Write-Verbose -Message ("Client `"{0}`" has been added to the inventory." -f $Name)
+            try {
+                $Inventory.SaveFile()
+                Write-Verbose -Message (
+                    "Client `"{0}`" has been added to the inventory." -f $Name
+                )
+            }
+            catch {
+                Write-Error -Message (
+                    "Cannot save inventory: {0}" -f $_.Exception.Message
+                )
+            }
         }
     }
 }

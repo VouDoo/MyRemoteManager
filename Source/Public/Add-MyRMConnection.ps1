@@ -86,18 +86,34 @@ function Add-MyRMConnection {
     )
 
     begin {
-        $Inventory = Import-Inventory
+        $ErrorActionPreference = "Stop"
+
+        try {
+            $Inventory = Import-Inventory
+        }
+        catch {
+            Write-Error -Message (
+                "Cannot open inventory: {0}" -f $_.Exception.Message
+            )
+        }
     }
 
     process {
-        $Connection = New-Object -TypeName Connection -ArgumentList @(
-            $Name,
-            $Hostname,
-            $Port,
-            $DefaultClient,
-            $DefaultUser,
-            $Description
-        )
+        try {
+            $Connection = New-Object -TypeName Connection -ArgumentList @(
+                $Name,
+                $Hostname,
+                $Port,
+                $DefaultClient,
+                $DefaultUser,
+                $Description
+            )#
+        }
+        catch {
+            Write-Error -Message (
+                "Cannot create new connection: {0}" -f $_.Exception.Message
+            )
+        }
 
         if ($PSCmdlet.ShouldProcess(
                 "Inventory file {0}" -f $Inventory.Path,
@@ -105,8 +121,17 @@ function Add-MyRMConnection {
             )
         ) {
             $Inventory.AddConnection($Connection)
-            $Inventory.SaveFile()
-            Write-Verbose -Message ("Connection `"{0}`" has been added to the inventory." -f $Name)
+            try {
+                $Inventory.SaveFile()
+                Write-Verbose -Message (
+                    "Connection `"{0}`" has been added to the inventory." -f $Name
+                )
+            }
+            catch {
+                Write-Error -Message (
+                    "Cannot save inventory: {0}" -f $_.Exception.Message
+                )
+            }
         }
     }
 }

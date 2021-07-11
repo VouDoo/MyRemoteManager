@@ -39,7 +39,16 @@ function Remove-MyRMConnection {
     )
 
     begin {
-        $Inventory = Import-Inventory
+        $ErrorActionPreference = "Stop"
+
+        try {
+            $Inventory = Import-Inventory
+        }
+        catch {
+            Write-Error -Message (
+                "Cannot open inventory: {0}" -f $_.Exception.Message
+            )
+        }
     }
 
     process {
@@ -49,8 +58,18 @@ function Remove-MyRMConnection {
             )
         ) {
             $Inventory.RemoveConnection($Name)
-            $Inventory.SaveFile()
-            Write-Verbose -Message ("Connection `"{0}`" has been removed from the inventory." -f $Name)
+
+            try {
+                $Inventory.SaveFile()
+                Write-Verbose -Message (
+                    "Connection `"{0}`" has been removed from the inventory." -f $Name
+                )
+            }
+            catch {
+                Write-Error -Message (
+                    "Cannot save inventory: {0}" -f $_.Exception.Message
+                )
+            }
         }
     }
 }

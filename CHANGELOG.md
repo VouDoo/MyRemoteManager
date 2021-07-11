@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Patch note
 
+- Added more exception handlers
+
+## [0.3.1]
+
+### Patch note
+
 - Code optimization
 - Enhanced parameter validators
 - Improved exception handlers
