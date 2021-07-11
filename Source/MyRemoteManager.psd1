@@ -12,10 +12,10 @@
     RootModule           = 'MyRemoteManager.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.3.0'
+    ModuleVersion        = '0.3.1'
 
     # Supported PSEditions
-    CompatiblePSEditions = @("Core")
+    CompatiblePSEditions = @('Core')
 
     # ID used to uniquely identify this module
     GUID                 = '322b0f58-07df-4c88-9b9b-3c1ab966fa3a'
