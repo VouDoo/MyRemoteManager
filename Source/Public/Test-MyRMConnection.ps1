@@ -19,9 +19,11 @@ function Test-MyRMConnection {
 
     .EXAMPLE
     PS> Test-MyRMConnection myconn
+    (status)
 
     .EXAMPLE
     PS> Test-MyRMConnection -Name myconn
+    (status)
 
     #>
 
