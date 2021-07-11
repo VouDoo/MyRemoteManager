@@ -33,14 +33,13 @@ function Remove-MyRMConnection {
             Mandatory = $true,
             HelpMessage = "Name of the connection."
         )]
-        [ValidateNotNullOrEmpty()]
-        [ValidateSet( [ValidateConnectionName] )]
+        [ValidateSet([ValidateSetConnectionName])]
+        [ValidateConnectionName()]
         [string] $Name
     )
 
     begin {
-        $Inventory = New-Object -TypeName Inventory
-        $Inventory.ReadFile()
+        $Inventory = Import-Inventory
     }
 
     process {

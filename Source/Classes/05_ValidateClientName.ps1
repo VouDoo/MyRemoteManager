@@ -1,7 +1,11 @@
-class ValidateClientName : IValidateSetValuesGenerator {
-    [string[]] GetValidValues() {
-        $Inventory = New-Object -TypeName Inventory
-        $Inventory.ReadFile()
-        return $Inventory.Clients | ForEach-Object -Process { $_.Name }
+class ValidateClientName : ValidateArgumentsAttribute {
+    [void] Validate(
+        [System.Object] $Argument,
+        [System.Management.Automation.EngineIntrinsics] $EngineIntrinsics
+    ) {
+        $Inventory = Import-Inventory
+        if (-not $Inventory.ClientExists($Argument)) {
+            Throw "Client `"{0}`" does not exist." -f $Argument
+        }
     }
 }

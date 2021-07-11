@@ -28,15 +28,31 @@ class Inventory {
     }
 
     [void] ReadFile() {
-        $Items = Get-Content -Path $this.Path -Raw -Encoding ([Inventory]::Encoding) | ConvertFrom-Json -AsHashtable
+        # Get content from the file
+        $GetContentParams = @{
+            Path        = $this.Path
+            Raw         = $true
+            Encoding    = [Inventory]::Encoding
+            ErrorAction = "Stop"
+        }
+        try {
+            $Items = Get-Content @GetContentParams | ConvertFrom-Json -AsHashtable
+        }
+        catch {
+            throw "Cannot open inventory: {0}" -f $_.Exception.Message
+        }
+
+        # Check version of the inventory
         if ($Items.Version -ne $this.Version) {
-            Write-Warning -Message (
-                "Version of the inventory file is not supported. Current version: `"{0}`", Expected version: `"{1}`"" -f (
+            throw (
+                "Version of the inventory file is not supported.",
+                "Current version: `"{0}`", Expected version: `"{1}`"" -f (
                     $Items.Version, $this.Version
                 )
             )
-            throw "Version of the inventory file is not supported."
         }
+
+        # Add every Client to inventory object
         foreach ($c in $Items.Clients) {
             $this.Clients += New-Object -TypeName Client -ArgumentList @(
                 $c.Name,
@@ -47,12 +63,16 @@ class Inventory {
                 $c.Description
             )
         }
-        if ($this.ClientNameDuplicateExists()) {
+
+        # Check if Client name duplicates exist
+        if ($this.ClientNameDuplicatesExist()) {
             Write-Warning -Message ("Fix the inventory by renaming the duplicated client names in the inventory file: {0}" -f (
                     [Inventory]::GetPath()
                 )
             )
         }
+
+        # Add every Connection to inventory object
         foreach ($c in $Items.Connections) {
             $this.Connections += New-Object -TypeName Connection -ArgumentList @(
                 $c.Name,
@@ -63,7 +83,9 @@ class Inventory {
                 $c.Description
             )
         }
-        if ($this.ConnectionNameDuplicateExists()) {
+
+        # Check if Connection name duplicates exist
+        if ($this.ConnectionNameDuplicatesExist()) {
             Write-Warning -Message (
                 "Fix the inventory by renaming the duplicated connection names in the inventory file: {0}" -f (
                     [Inventory]::GetPath()
@@ -80,25 +102,31 @@ class Inventory {
             Clients     = @()
             Connections = @()
         }
+
         foreach ($c in $this.Clients) {
             $Items.Clients += $c.Splat()
         }
+
         foreach ($c in $this.Connections) {
             $Connection = $c.Splat()
             $Items.Connections += $Connection
         }
+
         $Json = ConvertTo-Json -InputObject $Items -Depth 3
+
         $BackupPath = "{0}.backup" -f $this.Path
-        if (Test-Path -Path $this.Path) {
+        if (Test-Path -Path $this.Path -PathType Leaf) {
             Copy-Item -Path $this.Path -Destination $BackupPath -Force
         }
+
         Set-Content -Path $this.Path -Value $Json -Encoding ([Inventory]::Encoding) -Force
     }
 
-    hidden [bool] ClientNameDuplicateExists() {
+    hidden [bool] ClientNameDuplicatesExist() {
         $Duplicates = $this.Clients
         | Group-Object -Property Name
         | Where-Object -Property Count -GT 1
+
         if ($Duplicates) {
             $Duplicates | ForEach-Object -Process {
                 Write-Warning -Message ("It exists more than one client named `"{0}`"." -f $_.Name)
@@ -108,10 +136,11 @@ class Inventory {
         return $false
     }
 
-    hidden [bool] ConnectionNameDuplicateExists() {
+    hidden [bool] ConnectionNameDuplicatesExist() {
         $Duplicates = $this.Connections
         | Group-Object -Property Name
         | Where-Object -Property Count -GT 1
+
         if ($Duplicates) {
             $Duplicates | ForEach-Object -Process {
                 Write-Warning -Message ("It exists more than one connection named `"{0}`"." -f $_.Name)

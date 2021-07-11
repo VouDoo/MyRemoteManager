@@ -51,8 +51,7 @@ function Get-MyRMConnection {
     )
 
     begin {
-        $Inventory = New-Object -TypeName Inventory
-        $Inventory.ReadFile()
+        $Inventory = Import-Inventory
     }
 
     process {

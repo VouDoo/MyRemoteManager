@@ -42,13 +42,15 @@ function Invoke-MyRMConnection {
             Mandatory = $true,
             HelpMessage = "Name of the connection."
         )]
-        [ValidateSet([ValidateConnectionName])]
+        [ValidateSet([ValidateSetConnectionName])]
+        [ValidateConnectionName()]
         [string] $Name,
 
         [Parameter(
             HelpMessage = "Name of the client to use to initiate the connection."
         )]
-        [ValidateSet([ValidateClientName])]
+        [ValidateSet([ValidateSetClientName])]
+        [ValidateClientName()]
         [Alias("c")]
         [string] $Client,
 
@@ -66,8 +68,7 @@ function Invoke-MyRMConnection {
     )
 
     begin {
-        $Inventory = New-Object -TypeName Inventory
-        $Inventory.ReadFile()
+        $Inventory = Import-Inventory
     }
 
     process {
@@ -109,7 +110,7 @@ function Invoke-MyRMConnection {
                 )
             }
             else {
-                throw "Cannot invoke connection: A user must be specified."
+                Write-Error -Message "Cannot invoke connection: A user must be specified." -ErrorAction Stop
             }
         }
         else {
@@ -138,10 +139,10 @@ function Invoke-MyRMConnection {
                     Start-Process -FilePath $Invocation.Executable -ArgumentList $Invocation.Arguments
                 }
                 ([Scopes]::Undefined) {
-                    throw "Cannot invoke connection: Scope is undefined."
+                    Write-Error -Message "Cannot invoke connection: Scope is undefined."
                 }
                 default {
-                    throw "Cannot invoke connection: Scope is unknown."
+                    Write-Error -Message "Cannot invoke connection: Scope is unknown."
                 }
             }
         }

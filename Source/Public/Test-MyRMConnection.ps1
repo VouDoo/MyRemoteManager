@@ -15,17 +15,19 @@ function Test-MyRMConnection {
     None. You cannot pipe objects to Test-MyRMConnection.
 
     .OUTPUTS
-    System.Void. None.
+    System.String. Test-MyRMConnection returns a string with the status of the remote host.
 
     .EXAMPLE
     PS> Test-MyRMConnection myconn
+    (status)
 
     .EXAMPLE
     PS> Test-MyRMConnection -Name myconn
+    (status)
 
     #>
 
-    [OutputType([void])]
+    [OutputType([string])]
     [CmdletBinding()]
     param (
         [Parameter(
@@ -33,14 +35,14 @@ function Test-MyRMConnection {
             Mandatory = $true,
             HelpMessage = "Name of the connection."
         )]
-        [ValidateNotNullOrEmpty()]
-        [ValidateSet( [ValidateConnectionName] )]
+        [ValidateSet([ValidateSetConnectionName])]
+        [ValidateConnectionName()]
         [string] $Name
     )
 
     begin {
-        $Inventory = New-Object -TypeName Inventory
-        $Inventory.ReadFile()
+        $Inventory = Import-Inventory
+        $Status = "Unknown"
     }
 
     process {
@@ -53,15 +55,34 @@ function Test-MyRMConnection {
             $Connection.Port
         }
 
-        if (Test-Connection -TargetName $Connection.Hostname -TcpPort $Port -TimeoutSeconds 3) {
-            Write-Information -MessageData (
-                "Connection {0} is up on port {1}." -f $Connection.ToString(), $Port
-            )
+        $TestConnectionParams = @{
+            TargetName     = $Connection.Hostname
+            TcpPort        = $Port
+            TimeoutSeconds = 3
+            ErrorAction    = "Stop"
         }
-        else {
-            Write-Error -Exception (
-                [System.Exception] ("Connection: {0} is down on port {1}." -f $Connection.ToString(), $Port)
-            )
+
+        try {
+            if (Test-Connection @TestConnectionParams) {
+                Write-Information -MessageData (
+                    "Connection {0} is up on port {1}." -f $Connection.ToString(), $Port
+                ) -InformationAction Continue
+                $Status = "Online"
+            }
+            else {
+                Write-Error -Message (
+                    "Connection: {0} is down on port {1}." -f $Connection.ToString(), $Port
+                )
+                $Status = "Offline"
+            }
         }
+        catch {
+            Write-Error -Message $_.Exception.Message
+            $Status = "CritialFailure"
+        }
+    }
+
+    end {
+        $Status
     }
 }

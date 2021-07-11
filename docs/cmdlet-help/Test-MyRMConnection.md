@@ -24,11 +24,13 @@ Tests MyRemoteManager connection which is defined in the inventory.
 ### EXAMPLE 1
 ```
 Test-MyRMConnection myconn
+(status)
 ```
 
 ### EXAMPLE 2
 ```
 Test-MyRMConnection -Name myconn
+(status)
 ```
 
 ## PARAMETERS
@@ -56,7 +58,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ### None. You cannot pipe objects to Test-MyRMConnection.
 ## OUTPUTS
 
-### System.Void. None.
+### System.String. Test-MyRMConnection returns a string with the status of the remote host.
 ## NOTES
 
 ## RELATED LINKS
