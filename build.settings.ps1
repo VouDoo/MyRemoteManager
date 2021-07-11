@@ -1,7 +1,7 @@
 $ProjectRoot = $PSScriptRoot
 
 $ModuleName = "MyRemoteManager"
-$ModuleVersion = "0.3.2"
+$ModuleVersion = "0.3.3"
 
 $Source = Join-Path -Path $ProjectRoot -ChildPath "Source"
 $Tests = Join-Path -Path $ProjectRoot -ChildPath "Tests"
