@@ -99,8 +99,7 @@ function Add-MyRMClient {
             $Description
         )
 
-        if (
-            $PSCmdlet.ShouldProcess(
+        if ($PSCmdlet.ShouldProcess(
                 "Inventory file {0}" -f $Inventory.Path,
                 "Add Client {0}" -f $Client.ToString()
             )

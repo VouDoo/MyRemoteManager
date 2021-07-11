@@ -43,8 +43,7 @@ function Remove-MyRMConnection {
     }
 
     process {
-        if (
-            $PSCmdlet.ShouldProcess(
+        if ($PSCmdlet.ShouldProcess(
                 "Inventory file {0}" -f $Inventory.Path,
                 "Remove Connection {0}" -f $Name
             )

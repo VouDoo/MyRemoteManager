@@ -43,8 +43,7 @@ function Remove-MyRMClient {
     }
 
     process {
-        if (
-            $PSCmdlet.ShouldProcess(
+        if ($PSCmdlet.ShouldProcess(
                 "Inventory file {0}" -f $Inventory.Path,
                 "Remove Client {0}" -f $Name
             )

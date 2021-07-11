@@ -53,8 +53,7 @@ function Set-MyRMInventoryPath {
     }
 
     process {
-        if (
-            $PSCmdlet.ShouldProcess(
+        if ($PSCmdlet.ShouldProcess(
                 ("{0} environment variable {1}" -f $Target, $EnvVar),
                 "Set value {0}" -f $Path
             )
