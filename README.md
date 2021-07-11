@@ -21,7 +21,7 @@ To install the PowerShell module, follow one of these methods:
 - [Get released versions](#get-released-versions)
 - [Build from Source](#build-from-source)
 
-Please note that the module is only available for PowerShell Core (7 or later).
+Please note that the module is only available for PowerShell Core (7.1 or later).
 
 Get the latest version of PS Core from [the official PowerShell repository](https://github.com/PowerShell/PowerShell/releases).
 
