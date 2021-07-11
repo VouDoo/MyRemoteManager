@@ -24,11 +24,13 @@ Tests MyRemoteManager connection which is defined in the inventory.
 ### EXAMPLE 1
 ```
 Test-MyRMConnection myconn
+(status)
 ```
 
 ### EXAMPLE 2
 ```
 Test-MyRMConnection -Name myconn
+(status)
 ```
 
 ## PARAMETERS
