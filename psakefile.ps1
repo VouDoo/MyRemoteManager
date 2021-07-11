@@ -158,6 +158,7 @@ Task platyPS -depends Build {
         WithModulePage = $false
         Locale         = $Settings.DocsHelpLocale
         Encoding       = [System.Text.Encoding]::GetEncoding($Settings.DocsHelpOutEncoding)
+        Force          = $true
         Verbose        = $VerbosePreference
     }
 

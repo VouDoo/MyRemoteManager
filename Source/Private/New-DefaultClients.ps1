@@ -16,7 +16,7 @@ function New-DefaultClients {
 
     .EXAMPLE
     PS> New-DefaultClients
-    Client[]
+    (Client[])
 
     #>
 

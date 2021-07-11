@@ -70,7 +70,8 @@ function Add-MyRMConnection {
             Mandatory = $true,
             HelpMessage = "Default client to use to connect to the remote host."
         )]
-        [ValidateSet([ValidateClientName])]
+        [ValidateSet([ValidateSetClientName])]
+        [ValidateClientName()]
         [string] $DefaultClient,
 
         [Parameter(
@@ -85,8 +86,7 @@ function Add-MyRMConnection {
     )
 
     begin {
-        $Inventory = New-Object -TypeName Inventory
-        $Inventory.ReadFile()
+        $Inventory = Import-Inventory
     }
 
     process {

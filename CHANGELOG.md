@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [develop]
 
-### Note
+### Patch note
 
-Code optimization from `0.3.0`.
+- Code optimization
+- Enhanced parameter validators
+- Improved exception handlers
 
 ## [0.3.0]
 

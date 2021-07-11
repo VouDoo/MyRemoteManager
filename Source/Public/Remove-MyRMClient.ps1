@@ -33,14 +33,13 @@ function Remove-MyRMClient {
             Mandatory = $true,
             HelpMessage = "Name of the client."
         )]
-        [ValidateNotNullOrEmpty()]
-        [ValidateSet( [ValidateClientName] )]
+        [ValidateSet([ValidateSetClientName])]
+        [ValidateClientName()]
         [string] $Name
     )
 
     begin {
-        $Inventory = New-Object -TypeName Inventory
-        $Inventory.ReadFile()
+        $Inventory = Import-Inventory
     }
 
     process {
