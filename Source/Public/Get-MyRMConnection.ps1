@@ -51,7 +51,16 @@ function Get-MyRMConnection {
     )
 
     begin {
-        $Inventory = Import-Inventory
+        $ErrorActionPreference = "Stop"
+
+        try {
+            $Inventory = Import-Inventory
+        }
+        catch {
+            Write-Error -Message (
+                "Error import inventory: {0}" -f $_.Exception.Message
+            )
+        }
     }
 
     process {

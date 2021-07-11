@@ -68,7 +68,16 @@ function Invoke-MyRMConnection {
     )
 
     begin {
-        $Inventory = Import-Inventory
+        $ErrorActionPreference = "Stop"
+
+        try {
+            $Inventory = Import-Inventory
+        }
+        catch {
+            Write-Error -Message (
+                "Error import inventory: {0}" -f $_.Exception.Message
+            )
+        }
     }
 
     process {
@@ -110,7 +119,7 @@ function Invoke-MyRMConnection {
                 )
             }
             else {
-                Write-Error -Message "Cannot invoke connection: A user must be specified." -ErrorAction Stop
+                Write-Error -Message "Cannot invoke connection: A user must be specified."
             }
         }
         else {

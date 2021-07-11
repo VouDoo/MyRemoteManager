@@ -39,19 +39,37 @@ function Remove-MyRMClient {
     )
 
     begin {
-        $Inventory = Import-Inventory
+        $ErrorActionPreference = "Stop"
+
+        try {
+            $Inventory = Import-Inventory
+        }
+        catch {
+            Write-Error -Message (
+                "Cannot open inventory: {0}" -f $_.Exception.Message
+            )
+        }
     }
 
     process {
-        if (
-            $PSCmdlet.ShouldProcess(
+        if ($PSCmdlet.ShouldProcess(
                 "Inventory file {0}" -f $Inventory.Path,
                 "Remove Client {0}" -f $Name
             )
         ) {
             $Inventory.RemoveClient($Name)
-            $Inventory.SaveFile()
-            Write-Verbose -Message ("Client `"{0}`" has been removed from the inventory." -f $Name)
+
+            try {
+                $Inventory.SaveFile()
+                Write-Verbose -Message (
+                    "Client `"{0}`" has been removed from the inventory." -f $Name
+                )
+            }
+            catch {
+                Write-Error -Message (
+                    "Cannot save inventory: {0}" -f $_.Exception.Message
+                )
+            }
         }
     }
 }
