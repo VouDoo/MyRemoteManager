@@ -87,9 +87,23 @@ function Invoke-MyRMConnection {
         Write-Debug -Message ("Invoke connection {0}" -f $Invocation.Connection.ToString())
 
         $Invocation.Client = if ($Client) {
+            if (-not $Inventory.ClientExists($Client)) {
+                Write-Error -Message (
+                    "Cannot invoke connection with the specified client `"{0}`" because it does not exist." -f (
+                        $Client
+                    )
+                )
+            }
             $Inventory.GetClient($Client)
         }
         else {
+            if (-not $Inventory.ClientExists($Invocation.Connection.DefaultClient)) {
+                Write-Error -Message (
+                    "Cannot invoke connection with the default client `"{0}`" because it does not exist." -f (
+                        $Invocation.Connection.DefaultClient
+                    )
+                )
+            }
             $Inventory.GetClient($Invocation.Connection.DefaultClient)
         }
         Write-Debug -Message ("Invoke connection with client {0}" -f $Invocation.Client.ToString())
