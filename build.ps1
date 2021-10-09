@@ -37,7 +37,7 @@ if ($Bootstrap.IsPresent) {
 #region Execute psake task(s)
 $psakeFile = Join-Path -Path $PSScriptRoot -ChildPath "psakefile.ps1"
 if ($PSCmdlet.ParameterSetName -eq "Help") {
-    Get-PSakeScriptTasks -buildFile $psakeFile | Format-Table -Property Name, Description, Alias, DependsOn
+    Invoke-psake -buildFile $psakeFile -docs
 }
 else {
     Invoke-psake -buildFile $psakeFile -taskList $Task -nologo
