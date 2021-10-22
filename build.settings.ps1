@@ -21,7 +21,7 @@ $Docs = Join-Path -Path $ProjectRoot -ChildPath "docs"
     SourceClasses               = Get-ChildItem -Path "$Source\Classes\*.ps1" | Sort-Object Name
     SourcePrivateFunctions      = Get-ChildItem -Path "$Source\Private\*.ps1"
     SourcePublicFunctions       = Get-ChildItem -Path "$Source\Public\*.ps1"
-    #SourceData                  = Join-Path -Path $Source -ChildPath "Data"
+    #SourceDataFiles             = Get-ChildItem -Path "$Source\Data"
     SourceManifest              = Join-Path -Path $Source -ChildPath "$ModuleName.psd1"
     # Tests
     Tests                       = $Tests
