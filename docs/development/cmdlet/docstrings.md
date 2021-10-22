@@ -1,6 +1,6 @@
 # Cmdlet - Docstrings
 
-Every Cmdlet docstring must respect the [PowerShell Comment-based Help syntax](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comment_based_help?view=powershell-7.1).
+Every Cmdlet docstring must respect the [PowerShell Comment-based Help syntax](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comment_based_help).
 
 Example:
 
