@@ -48,7 +48,7 @@ Task Build -depends Init, Clean {
     Add-Content @ModuleFile -Value "#endregion Classes`n"
     Add-Content @ModuleFile -Value "#region Private functions"
     $Settings.SourcePrivateFunctions | ForEach-Object -Process {
-        "[{0}][module] Add private function {1}" -f $psake.context.currentTaskName, $_.Basename
+        "[{0}][module] Add private function `"{1}`"." -f $psake.context.currentTaskName, $_.Basename
         Add-Content @ModuleFile -Value (Get-Content -Path $_.FullName)
     }
     Add-Content @ModuleFile -Value "#endregion Private functions`n"
@@ -181,11 +181,13 @@ Task platyPS -depends Build {
         }
 
         # Update markdown help files
-        #if (Get-ChildItem -Path $Settings.DocsHelpOut -Filter *.md -Recurse) {
-        #    Get-ChildItem -Path $Settings.DocsHelpOut -Directory | ForEach-Object -Process {
-        #        Update-MarkdownHelp -Path $_.FullName -Verbose:$VerbosePreference | Out-Null
-        #    }
-        #}
+        <#
+        if (Get-ChildItem -Path $Settings.DocsHelpOut -Filter *.md -Recurse) {
+            Get-ChildItem -Path $Settings.DocsHelpOut -Directory | ForEach-Object -Process {
+                Update-MarkdownHelp -Path $_.FullName -Verbose:$VerbosePreference | Out-Null
+            }
+        }
+        #>
 
         # Build markdown help files
         New-MarkdownHelp @platyPSParams
