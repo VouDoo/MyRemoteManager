@@ -9,7 +9,7 @@ function Import-Inventory {
     Creates inventory object, reads inventory file and returns the object.
 
     .INPUTS
-    None. You cannot pipe objects to New-DefaultClients.
+    None. You cannot pipe objects to Import-Inventory.
 
     .OUTPUTS
     Inventory. Import-Inventory returns the inventory object.
