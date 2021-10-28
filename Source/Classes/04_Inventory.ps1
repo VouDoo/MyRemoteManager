@@ -52,6 +52,9 @@ class Inventory {
             )
         }
 
+        # Re-initialize Clients array
+        $this.Clients = @()
+
         # Add every Client to inventory object
         foreach ($c in $Items.Clients) {
             $this.Clients += New-Object -TypeName Client -ArgumentList @(
@@ -71,6 +74,9 @@ class Inventory {
                 )
             )
         }
+
+        # Re-initialize Connections array
+        $this.Connections = @()
 
         # Add every Connection to inventory object
         foreach ($c in $Items.Connections) {
