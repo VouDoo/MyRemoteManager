@@ -3,8 +3,8 @@
         Target     = "CurrentUser"
         Repository = "PSGallery"
     }
-    Pester           = "5.2.2"
-    psake            = "latest"
+    Pester           = "5.3.1"
+    psake            = "4.9.0"
     PSScriptAnalyzer = "latest"
-    platyPS          = "latest"
+    platyPS          = "0.14.2"
 }
