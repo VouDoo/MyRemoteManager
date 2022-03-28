@@ -24,11 +24,9 @@ function New-DefaultClients {
     [OutputType([Client[]])]
     param ()
 
-    begin {
-        $DefaultClient = @()
-    }
-
     process {
+        $DefaultClient = @()
+
         # OpenSSH (Microsoft Windows feature)
         $DefaultClient += New-Object -TypeName Client -ArgumentList @(
             "OpenSSH",
@@ -58,9 +56,7 @@ function New-DefaultClients {
             [Scopes]::External,
             "Microsoft Remote Desktop"
         )
-    }
 
-    end {
         $DefaultClient
     }
 }

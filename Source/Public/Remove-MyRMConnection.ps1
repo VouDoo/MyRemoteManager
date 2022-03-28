@@ -40,7 +40,9 @@ function Remove-MyRMConnection {
 
     begin {
         $ErrorActionPreference = "Stop"
+    }
 
+    process {
         try {
             $Inventory = Import-Inventory
         }
@@ -49,9 +51,7 @@ function Remove-MyRMConnection {
                 "Cannot open inventory: {0}" -f $_.Exception.Message
             )
         }
-    }
 
-    process {
         if ($PSCmdlet.ShouldProcess(
                 "Inventory file {0}" -f $Inventory.Path,
                 "Remove Connection {0}" -f $Name

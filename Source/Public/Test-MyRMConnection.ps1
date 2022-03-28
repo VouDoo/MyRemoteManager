@@ -40,12 +40,10 @@ function Test-MyRMConnection {
         [string] $Name
     )
 
-    begin {
+    process {
         $Inventory = Import-Inventory
         $Status = "Unknown"
-    }
 
-    process {
         $Connection = $Inventory.GetConnection($Name)
 
         $Port = if ($Connection.IsDefaultPort()) {
@@ -80,9 +78,7 @@ function Test-MyRMConnection {
             Write-Error -Message $_.Exception.Message
             $Status = "CriticalFailure"
         }
-    }
 
-    end {
         $Status
     }
 }

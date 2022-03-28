@@ -65,11 +65,11 @@ function New-MyRMInventory {
 
     begin {
         $ErrorActionPreference = "Stop"
-
-        $Inventory = New-Object -TypeName Inventory
     }
 
     process {
+        $Inventory = New-Object -TypeName Inventory
+
         if ((Test-Path -Path $Inventory.Path -PathType Leaf) -and -not ($Force.IsPresent)) {
             Write-Error -ErrorAction Stop -Exception (
                 [System.IO.IOException] "Inventory file already exists. Use `"-Force`" to overwrite it."
@@ -94,9 +94,7 @@ function New-MyRMInventory {
                 )
             }
         }
-    }
 
-    end {
         if ($PassThru.IsPresent) {
             Resolve-Path $Inventory.Path | Select-Object -ExpandProperty Path
         }

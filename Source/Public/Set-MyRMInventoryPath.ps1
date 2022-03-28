@@ -48,11 +48,9 @@ function Set-MyRMInventoryPath {
         [string] $Target = "User"
     )
 
-    begin {
-        $EnvVar = [Inventory]::EnvVariable
-    }
-
     process {
+        $EnvVar = [Inventory]::EnvVariable
+
         if ($PSCmdlet.ShouldProcess(
                 ("{0} environment variable {1}" -f $Target, $EnvVar),
                 "Set value {0}" -f $Path

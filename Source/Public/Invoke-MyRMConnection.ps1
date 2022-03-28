@@ -69,7 +69,9 @@ function Invoke-MyRMConnection {
 
     begin {
         $ErrorActionPreference = "Stop"
+    }
 
+    process {
         try {
             $Inventory = Import-Inventory
         }
@@ -78,9 +80,7 @@ function Invoke-MyRMConnection {
                 "Error import inventory: {0}" -f $_.Exception.Message
             )
         }
-    }
 
-    process {
         $Invocation = @{}
 
         $Invocation.Connection = $Inventory.GetConnection($Name)

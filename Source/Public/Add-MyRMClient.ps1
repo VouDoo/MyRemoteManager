@@ -87,7 +87,9 @@ function Add-MyRMClient {
 
     begin {
         $ErrorActionPreference = "Stop"
+    }
 
+    process {
         try {
             $Inventory = Import-Inventory
         }
@@ -96,9 +98,7 @@ function Add-MyRMClient {
                 "Error inventory: {0}" -f $_.Exception.Message
             )
         }
-    }
 
-    process {
         try {
             $Client = New-Object -TypeName Client -ArgumentList @(
                 $Name,

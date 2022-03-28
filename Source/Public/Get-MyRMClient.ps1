@@ -40,7 +40,9 @@ function Get-MyRMClient {
 
     begin {
         $ErrorActionPreference = "Stop"
+    }
 
+    process {
         try {
             $Inventory = Import-Inventory
         }
@@ -49,9 +51,7 @@ function Get-MyRMClient {
                 "Error import inventory: {0}" -f $_.Exception.Message
             )
         }
-    }
 
-    process {
         $Clients = @()
         foreach ($c in $Inventory.Clients) {
             $Clients += [PSCustomObject] @{
@@ -62,9 +62,7 @@ function Get-MyRMClient {
                 Description  = $c.Description
             }
         }
-    }
 
-    end {
         $Clients
         | Where-Object -Property Name -Like $Name
         | Sort-Object -Property Name
