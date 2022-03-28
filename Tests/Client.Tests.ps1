@@ -95,3 +95,38 @@ Describe "Remove-MyRMClient" {
         { Remove-MyRMClient -Name "TestClient0" } | Should -Throw
     }
 }
+Describe "Rename-MyRMClient" {
+    BeforeAll {
+        @(
+            @{
+                Name        = "BadlyNamedClient"
+                Executable  = "client.exe"
+                Arguments   = "-p <port> <host>"
+                DefaultPort = 12345
+            },
+            @{
+                Name        = "WhateverClient"
+                Executable  = "whatever.exe"
+                Arguments   = "-h <host> -p <port>"
+                DefaultPort = 666
+            }
+        ) | ForEach-Object -Process {
+            Add-MyRMClient @_
+        }
+    }
+    It "Renames an existing client" {
+        Rename-MyRMClient -Name "BadlyNamedClient" -NewName "NicelyNamedClient"
+        | Should -BeNullOrEmpty
+    }
+    It "Renames a client that does not exist, and fails" {
+        { Rename-MyRMClient -Name "MissingClient" -NewName "NopeClient" } | Should -Throw
+    }
+    It "Renames a client with a name already used, and fails" {
+        { Rename-MyRMClient -Name "NicelyNamedClient" -NewName "WhateverClient" }
+        | Should -Throw -ExpectedMessage "Cannot rename Client `"NicelyNamedClient`" to `"WhateverClient`" as this name is already used."
+    }
+    It "Uses same name for renaming, and fails" {
+        { Rename-MyRMClient -Name "NicelyNamedClient" -NewName "NicelyNamedClient" }
+        | Should -Throw -ExpectedMessage "The two names are similar."
+    }
+}

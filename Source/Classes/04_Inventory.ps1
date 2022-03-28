@@ -194,6 +194,30 @@ class Inventory {
         $this.Connections = $this.Connections | Where-Object -Property Name -NE $Name
     }
 
+    [void] RenameClient([string] $Name, [string] $NewName) {
+        if ($Name -eq $NewName) {
+            throw "The two names are similar."
+        }
+        elseif (-not $this.ClientExists($Name)) {
+            throw "No Client `"{0}`" to rename." -f $Name
+        }
+        elseif ($this.ClientExists($NewName)) {
+            throw "Cannot rename Client `"{0}`" to `"{1}`" as this name is already used." -f $Name, $NewName
+        }
+
+        for ($i = 0; $i -lt $this.Clients.count; $i++) {
+            if ($this.Clients[$i].Name -eq $Name) {
+                $this.Clients[$i].Name = $NewName
+            }
+        }
+
+        for ($i = 0; $i -lt $this.Connections.count; $i++) {
+            if ($this.Connections[$i].DefaultClient -eq $Name) {
+                $this.Connections[$i].DefaultClient = $NewName
+            }
+        }
+    }
+
     [void] RenameConnection([string] $Name, [string] $NewName) {
         if ($Name -eq $NewName) {
             throw "The two names are similar."
