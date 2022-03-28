@@ -130,6 +130,7 @@ function Add-MyRMClient {
             )
         ) {
             $Inventory.AddClient($Client)
+
             try {
                 $Inventory.SaveFile()
                 Write-Verbose -Message (

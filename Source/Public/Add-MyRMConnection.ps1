@@ -121,6 +121,7 @@ function Add-MyRMConnection {
             )
         ) {
             $Inventory.AddConnection($Connection)
+
             try {
                 $Inventory.SaveFile()
                 Write-Verbose -Message (

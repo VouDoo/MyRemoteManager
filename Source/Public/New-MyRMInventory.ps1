@@ -82,6 +82,7 @@ function New-MyRMInventory {
                     $Inventory.AddClient($_)
                 }
             }
+
             try {
                 $Inventory.SaveFile()
                 Write-Verbose -Message (
