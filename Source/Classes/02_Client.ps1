@@ -32,7 +32,7 @@ class Client : Item {
         $this.Description = $Description
     }
 
-    hidden static [void] ValidateTokenizedArgs(
+    static [void] ValidateTokenizedArgs(
         [string] $TokenizedArgs
     ) {
         @(
