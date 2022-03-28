@@ -24,7 +24,7 @@ class Inventory {
             )
             if ($Value) { return $Value }
         }
-        return Join-Path -Path $HOME -ChildPath "MyRemoteManager.json"
+        return Join-Path -Path $env:USERPROFILE -ChildPath "MyRemoteManager.json"
     }
 
     [void] ReadFile() {
