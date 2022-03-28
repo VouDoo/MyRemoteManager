@@ -21,6 +21,7 @@ function New-DefaultClients {
     #>
 
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope = "Function", Target = "*")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns", "", Scope = "Function", Target = "*")]
     [OutputType([Client[]])]
     param ()
 
