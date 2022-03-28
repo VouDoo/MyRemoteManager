@@ -1,12 +1,9 @@
 # Contributing
 
 - [Contributing](#contributing)
-  - [Contributing Code](#contributing-code)
-    - [Quick run](#quick-run)
+  - [Quick run](#quick-run)
 
-## Contributing Code
-
-### Quick run
+## Quick run
 
 1. Clone the repository to your local disk
 
