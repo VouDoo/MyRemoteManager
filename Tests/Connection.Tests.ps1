@@ -48,7 +48,8 @@ Describe "Add-MyRMConnection" {
             Port          = 2468
             DefaultClient = "TestClient"
         }
-        { Add-MyRMConnection @Arguments } | Should -Throw -ExpectedMessage "Cannot add Connection `"TestConnection2`" as it already exists."
+        { Add-MyRMConnection @Arguments }
+        | Should -Throw -ExpectedMessage "Cannot add Connection `"TestConnection2`" as it already exists."
     }
 }
 Describe "Get-MyRMConnection" {
@@ -76,7 +77,7 @@ Describe "Get-MyRMConnection" {
         (Get-MyRMConnection).count | Should -BeExactly 4
     }
     It "Gets Connections filtered by name" {
-        (Get-MyRMConnection -name "ConnectionTest*")[0].Name | Should -BeExactly "ConnectionTest4"
+        (Get-MyRMConnection -Name "ConnectionTest*")[0].Name | Should -BeExactly "ConnectionTest4"
     }
     It "Gets Connections filtered by client name" {
         (Get-MyRMConnection -Client "ClientTest")[0].Name | Should -BeExactly "TestConnection3"
@@ -85,23 +86,57 @@ Describe "Get-MyRMConnection" {
         (Get-MyRMConnection -Hostname "conn2*")[0].Name | Should -BeExactly "TestConnection2"
     }
     It "Gets Connections filtered by name and client name" {
-        (Get-MyRMConnection -name "*tion2" -Client "TestClient")[0].Name | Should -BeExactly "TestConnection2"
+        (Get-MyRMConnection -Name "*tion2" -Client "TestClient")[0].Name | Should -BeExactly "TestConnection2"
     }
     It "Gets Connections filtered by name and hostname name" {
-        (Get-MyRMConnection -name "*tion3" -Hostname "*.test")[0].Name | Should -BeExactly "TestConnection3"
+        (Get-MyRMConnection -Name "*tion3" -Hostname "*.test")[0].Name | Should -BeExactly "TestConnection3"
     }
     It "Gets Connections filtered by name and client name that do not exist" {
-        (Get-MyRMConnection -name "*Test3" -Client "TestClient") | Should -BeNullOrEmpty
+        (Get-MyRMConnection -Name "*Test3" -Client "TestClient") | Should -BeNullOrEmpty
     }
     It "Gets Connections filtered by name and hostname name that do not exist" {
-        (Get-MyRMConnection -name "*Test2" -Hostname "do.not.exist") | Should -BeNullOrEmpty
+        (Get-MyRMConnection -Name "*Test2" -Hostname "do.not.exist") | Should -BeNullOrEmpty
     }
 }
 Describe "Remove-MyRMConnection" {
     It "Removes an existing connection" {
-        Remove-MyRMConnection -name "TestConnection1" | Should -BeNullOrEmpty
+        Remove-MyRMConnection -Name "TestConnection1" | Should -BeNullOrEmpty
     }
     It "Removes a connection that does not exist, and fails" {
-        { Remove-MyRMConnection -name "TestConnection0" } | Should -Throw
+        { Remove-MyRMConnection -Name "TestConnection0" } | Should -Throw
+    }
+}
+
+Describe "Rename-MyRMConnection" {
+    BeforeAll {
+        @(
+            @{
+                Name          = "BadlyNamedConnection"
+                Hostname      = "hostname.test"
+                DefaultClient = "ClientTest"
+            },
+            @{
+                Name          = "WhateverConnection"
+                Hostname      = "hostname.test"
+                DefaultClient = "ClientTest"
+            }
+        ) | ForEach-Object -Process {
+            Add-MyRMConnection @_
+        }
+    }
+    It "Renames an existing connection" {
+        Rename-MyRMConnection -Name "BadlyNamedConnection" -NewName "NicelyNamedConnection"
+        | Should -BeNullOrEmpty
+    }
+    It "Renames a connection that does not exist, and fails" {
+        { Rename-MyRMConnection -Name "MissingConnection" -NewName "NopeConnection" } | Should -Throw
+    }
+    It "Renames a connection with a name already used, and fails" {
+        { Rename-MyRMConnection -Name "NicelyNamedConnection" -NewName "WhateverConnection" }
+        | Should -Throw -ExpectedMessage "Cannot rename Connection `"NicelyNamedConnection`" to `"WhateverConnection`" as this name is already used."
+    }
+    It "Uses same name for renaming, and fails" {
+        { Rename-MyRMConnection -Name "NicelyNamedConnection" -NewName "NicelyNamedConnection" }
+        | Should -Throw -ExpectedMessage "The two names are similar."
     }
 }

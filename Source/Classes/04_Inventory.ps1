@@ -193,4 +193,22 @@ class Inventory {
     [void] RemoveConnection([string] $Name) {
         $this.Connections = $this.Connections | Where-Object -Property Name -NE $Name
     }
+
+    [void] RenameConnection([string] $Name, [string] $NewName) {
+        if ($Name -eq $NewName) {
+            throw "The two names are similar."
+        }
+        elseif (-not $this.ConnectionExists($Name)) {
+            throw "No Connection `"{0}`" to rename." -f $Name
+        }
+        elseif ($this.ConnectionExists($NewName)) {
+            throw "Cannot rename Connection `"{0}`" to `"{1}`" as this name is already used." -f $Name, $NewName
+        }
+
+        for ($i = 0; $i -lt $this.Connections.count; $i++) {
+            if ($this.Connections[$i].Name -eq $Name) {
+                $this.Connections[$i].Name = $NewName
+            }
+        }
+    }
 }
